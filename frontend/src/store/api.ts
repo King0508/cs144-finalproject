@@ -28,8 +28,15 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   };
   const res = await fetch(path, { ...init, headers });
   if (!res.ok) {
-    const body = await res.text().catch(() => "");
-    throw new Error(`API ${res.status}: ${body || res.statusText}`);
+    const raw = await res.text().catch(() => "");
+    let msg = raw || res.statusText;
+    try {
+      const body = JSON.parse(raw) as { error?: string; details?: string };
+      msg = body.details ?? body.error ?? msg;
+    } catch {
+      // Not JSON — keep the raw text as the message.
+    }
+    throw new Error(`API ${res.status}: ${msg}`);
   }
   return (await res.json()) as T;
 }

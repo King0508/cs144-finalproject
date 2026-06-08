@@ -57,7 +57,13 @@ router.post("/next-study", async (req: AuthedRequest, res) => {
       return;
     }
     console.error("[ai/next-study]", err);
-    res.status(500).json({ error: "AI request failed." });
+    const details =
+      process.env.NODE_ENV === "production"
+        ? undefined
+        : err instanceof Error
+          ? err.message
+          : String(err);
+    res.status(500).json({ error: "AI request failed.", details });
   }
 });
 
@@ -79,7 +85,13 @@ router.post("/ask", async (req: AuthedRequest, res) => {
       return;
     }
     console.error("[ai/ask]", err);
-    res.status(500).json({ error: "AI request failed." });
+    const details =
+      process.env.NODE_ENV === "production"
+        ? undefined
+        : err instanceof Error
+          ? err.message
+          : String(err);
+    res.status(500).json({ error: "AI request failed.", details });
   }
 });
 

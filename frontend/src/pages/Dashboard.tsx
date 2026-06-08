@@ -13,7 +13,6 @@ import { AskBotPanel } from "../components/dashboard/AskBotPanel";
 import { FollowUpList } from "../components/dashboard/FollowUpList";
 import { MinistryToolsPanel } from "../components/dashboard/MinistryToolsPanel";
 import { PageHeader } from "../components/ui/PageHeader";
-import { Reveal } from "../components/ui/Reveal";
 
 interface DashboardProps {
   userDoc: UserDoc;
@@ -53,47 +52,35 @@ export function Dashboard({ userDoc }: DashboardProps) {
       <WeeklyHeatmapCanvas studies={studies} weekStart={weekStart} />
 
       {/*
-       * Below-the-fold sections are wrapped in a transparent div so the
-       * top-level stagger animation doesn't cascade past the heatmap.
-       * Each child uses <Reveal> so it fades up as the user scrolls.
+       * Below-the-fold sections live in a plain wrapper so the top-level
+       * stagger animation doesn't cascade past the heatmap. Each section
+       * just renders — no per-section reveal animation.
        */}
       <div className="space-y-section">
-        <Reveal>
-          <div className="grid gap-stack md:grid-cols-2">
-            <GenderStackedBarCard
-              title="By bible talk"
-              rows={bibleTalkRows}
-              emptyHint="No bible-talk activity yet."
-              headingId="cc-bt-gender"
-            />
-            <GenderStackedBarCard
-              title="By study"
-              rows={studyRows}
-              emptyHint="No studies scheduled yet."
-              headingId="cc-study-gender"
-            />
-          </div>
-        </Reveal>
+        <div className="grid gap-stack md:grid-cols-2">
+          <GenderStackedBarCard
+            title="By bible talk"
+            rows={bibleTalkRows}
+            emptyHint="No bible-talk activity yet."
+            headingId="cc-bt-gender"
+          />
+          <GenderStackedBarCard
+            title="By study"
+            rows={studyRows}
+            emptyHint="No studies scheduled yet."
+            headingId="cc-study-gender"
+          />
+        </div>
 
         {userDoc.role === "ministryLeader" ? (
-          <Reveal>
-            <CountCard title="By campus" data={byCampus} emptyHint="No campus activity yet." />
-          </Reveal>
+          <CountCard title="By campus" data={byCampus} emptyHint="No campus activity yet." />
         ) : null}
 
-        <Reveal>
-          <AskBotPanel />
-        </Reveal>
+        <AskBotPanel />
 
-        <Reveal>
-          <FollowUpList invitees={needsFollowUp} />
-        </Reveal>
+        <FollowUpList invitees={needsFollowUp} />
 
-        {userDoc.role === "ministryLeader" ? (
-          <Reveal>
-            <MinistryToolsPanel />
-          </Reveal>
-        ) : null}
+        {userDoc.role === "ministryLeader" ? <MinistryToolsPanel /> : null}
       </div>
     </div>
   );
