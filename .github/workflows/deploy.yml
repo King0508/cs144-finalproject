@@ -1,0 +1,119 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write # required for Workload Identity Federation
+
+env:
+  GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+  GCP_REGION: ${{ secrets.GCP_REGION }} # e.g. us-central1
+  GKE_CLUSTER: ${{ secrets.GKE_CLUSTER }}
+  GKE_ZONE: ${{ secrets.GKE_ZONE }} # e.g. us-central1-a
+  AR_REPO: ${{ secrets.AR_REPO }} # Artifact Registry repository name
+
+jobs:
+  build:
+    name: Build & test
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with: { node-version: "22", cache: "npm" }
+
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm test
+
+  deploy:
+    name: Build images & deploy to GKE
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud (WIF)
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ secrets.GCP_WIF_PROVIDER }}
+          service_account: ${{ secrets.GCP_DEPLOYER_SA }}
+
+      - name: Set up gcloud
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Configure docker for Artifact Registry
+        run: gcloud auth configure-docker ${{ env.GCP_REGION }}-docker.pkg.dev --quiet
+
+      - name: Build & push backend image
+        run: |
+          IMG="${GCP_REGION}-docker.pkg.dev/${GCP_PROJECT_ID}/${AR_REPO}/backend:${GITHUB_SHA}"
+          docker build -f backend/Dockerfile -t "$IMG" .
+          docker push "$IMG"
+          echo "BACKEND_IMAGE=$IMG" >> $GITHUB_ENV
+
+      - name: Build & push frontend image
+        env:
+          VITE_FIREBASE_API_KEY: ${{ secrets.VITE_FIREBASE_API_KEY }}
+          VITE_FIREBASE_AUTH_DOMAIN: ${{ secrets.VITE_FIREBASE_AUTH_DOMAIN }}
+          VITE_FIREBASE_PROJECT_ID: ${{ secrets.VITE_FIREBASE_PROJECT_ID }}
+          VITE_FIREBASE_STORAGE_BUCKET: ${{ secrets.VITE_FIREBASE_STORAGE_BUCKET }}
+          VITE_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.VITE_FIREBASE_MESSAGING_SENDER_ID }}
+          VITE_FIREBASE_APP_ID: ${{ secrets.VITE_FIREBASE_APP_ID }}
+          VITE_FIREBASE_VAPID_KEY: ${{ secrets.VITE_FIREBASE_VAPID_KEY }}
+        run: |
+          IMG="${GCP_REGION}-docker.pkg.dev/${GCP_PROJECT_ID}/${AR_REPO}/frontend:${GITHUB_SHA}"
+          docker build -f frontend/Dockerfile \
+            --build-arg VITE_FIREBASE_API_KEY="$VITE_FIREBASE_API_KEY" \
+            --build-arg VITE_FIREBASE_AUTH_DOMAIN="$VITE_FIREBASE_AUTH_DOMAIN" \
+            --build-arg VITE_FIREBASE_PROJECT_ID="$VITE_FIREBASE_PROJECT_ID" \
+            --build-arg VITE_FIREBASE_STORAGE_BUCKET="$VITE_FIREBASE_STORAGE_BUCKET" \
+            --build-arg VITE_FIREBASE_MESSAGING_SENDER_ID="$VITE_FIREBASE_MESSAGING_SENDER_ID" \
+            --build-arg VITE_FIREBASE_APP_ID="$VITE_FIREBASE_APP_ID" \
+            --build-arg VITE_FIREBASE_VAPID_KEY="$VITE_FIREBASE_VAPID_KEY" \
+            -t "$IMG" .
+          docker push "$IMG"
+          echo "FRONTEND_IMAGE=$IMG" >> $GITHUB_ENV
+
+      - name: Get GKE credentials
+        uses: google-github-actions/get-gke-credentials@v2
+        with:
+          cluster_name: ${{ env.GKE_CLUSTER }}
+          location: ${{ env.GKE_ZONE }}
+
+      - name: Render manifests
+        run: |
+          mkdir -p k8s-rendered
+          cp -r k8s/* k8s-rendered/
+          sed -i "s|IMAGE_PLACEHOLDER_BACKEND|${BACKEND_IMAGE}|g" k8s-rendered/backend-deployment.yaml
+          sed -i "s|IMAGE_PLACEHOLDER_FRONTEND|${FRONTEND_IMAGE}|g" k8s-rendered/frontend-deployment.yaml
+          sed -i "s|DOMAIN_PLACEHOLDER|${{ secrets.APP_DOMAIN }}|g" k8s-rendered/ingress.yaml
+
+      - name: Deploy to GKE
+        run: |
+          kubectl apply -f k8s-rendered/namespace.yaml
+          kubectl apply -f k8s-rendered/backend-deployment.yaml
+          kubectl apply -f k8s-rendered/backend-service.yaml
+          kubectl apply -f k8s-rendered/frontend-deployment.yaml
+          kubectl apply -f k8s-rendered/frontend-service.yaml
+          kubectl apply -f k8s-rendered/hpa.yaml
+          kubectl apply -f k8s-rendered/ingress.yaml
+
+      - name: Wait for rollout
+        run: |
+          kubectl -n ministry rollout status deploy/backend --timeout=5m
+          kubectl -n ministry rollout status deploy/frontend --timeout=5m
+
+      - name: Show final state
+        if: always()
+        run: |
+          kubectl -n ministry get pods -o wide
+          kubectl -n ministry get svc
+          kubectl -n ministry get ingress

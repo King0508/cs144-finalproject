@@ -1,0 +1,21 @@
+{
+  "name": "campus-ministry-pwa",
+  "version": "0.1.0",
+  "private": true,
+  "description": "CS 144 final project: PWA for campus Christian ministry (chat + bible-study scheduling + calendar) deployed on GKE.",
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
+  "scripts": {
+    "dev": "concurrently -k -n frontend,backend -c blue,green \"npm -w frontend run dev\" \"npm -w backend run dev\"",
+    "lint": "npm -w frontend run lint && npm -w backend run lint",
+    "typecheck": "npm -w frontend run typecheck && npm -w backend run typecheck",
+    "test": "npm -w frontend run test && npm -w backend run test",
+    "build": "npm -w frontend run build && npm -w backend run build",
+    "rules:test": "npx firebase emulators:exec --only firestore \"npm -w backend run test:rules\""
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0"
+  }
+}

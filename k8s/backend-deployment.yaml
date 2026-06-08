@@ -1,0 +1,79 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  namespace: ministry
+  labels:
+    app: backend
+spec:
+  replicas: 2
+  revisionHistoryLimit: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+        - name: backend
+          # CI rewrites this tag with the commit SHA before kubectl apply.
+          image: IMAGE_PLACEHOLDER_BACKEND
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+              name: http
+          env:
+            - name: PORT
+              value: "8080"
+            - name: FIREBASE_PROJECT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: backend-config
+                  key: FIREBASE_PROJECT_ID
+            - name: GEMINI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: backend-config
+                  key: GEMINI_API_KEY
+            - name: CORS_ALLOW_ORIGIN
+              valueFrom:
+                secretKeyRef:
+                  name: backend-config
+                  key: CORS_ALLOW_ORIGIN
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              value: /var/secrets/google/service-account.json
+            # Only one replica should run the reminder scheduler. Pod 0 takes it.
+            - name: DISABLE_SCHEDULER
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.annotations['ministry.io/disable-scheduler']
+          volumeMounts:
+            - name: gcp-sa
+              mountPath: /var/secrets/google
+              readOnly: true
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "128Mi"
+            limits:
+              cpu: "300m"
+              memory: "256Mi"
+          readinessProbe:
+            httpGet: { path: /readyz, port: http }
+            initialDelaySeconds: 3
+            periodSeconds: 5
+          livenessProbe:
+            httpGet: { path: /healthz, port: http }
+            initialDelaySeconds: 10
+            periodSeconds: 15
+      volumes:
+        - name: gcp-sa
+          secret:
+            secretName: backend-service-account

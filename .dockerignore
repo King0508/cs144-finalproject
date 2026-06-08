@@ -1,0 +1,17 @@
+**/node_modules
+**/dist
+**/.git
+**/.github
+**/.vscode
+**/.idea
+**/coverage
+**/.env
+**/.env.local
+**/.env.*.local
+**/.firebase
+**/logs
+**/.DS_Store
+**/.cursor
+**/projectspec.md
+**/service-account*.json
+**/*.log

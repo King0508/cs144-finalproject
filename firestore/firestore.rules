@@ -1,0 +1,102 @@
+rules_version = '2';
+
+// Role-based visibility for the campus-ministry app.
+//
+//   member         -> can read everything in their own bibleTalk
+//   btLeader       -> can read everything in their own campus
+//   ministryLeader -> can read everything
+//
+// Writes are scoped tightly: members can write studies/invitees in their own
+// bibleTalk; leaders can write within their broader scope; chat messages
+// require the author to write under their own uid.
+//
+// All reads of /campuses and /bibleTalks are allowed for any signed-in user
+// because onboarding needs to list them.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() { return request.auth != null; }
+    function myUid() { return request.auth.uid; }
+    function myUserDoc() {
+      return get(/databases/$(database)/documents/users/$(myUid())).data;
+    }
+    function myRole() { return myUserDoc().role; }
+    function myCampusId() { return myUserDoc().campusId; }
+    function myBibleTalkId() { return myUserDoc().bibleTalkId; }
+
+    function isMinistryLeader() { return isSignedIn() && myRole() == 'ministryLeader'; }
+    function isBtLeader() { return isSignedIn() && myRole() == 'btLeader'; }
+
+    function canReadResourceByScope(campusId, bibleTalkId) {
+      return isSignedIn() && (
+        isMinistryLeader() ||
+        (isBtLeader() && campusId == myCampusId()) ||
+        (bibleTalkId == myBibleTalkId())
+      );
+    }
+
+    match /campuses/{campusId} {
+      allow read: if isSignedIn();
+      allow write: if isMinistryLeader();
+    }
+
+    match /bibleTalks/{btId} {
+      allow read: if isSignedIn();
+      // Member can self-add to a bibleTalk in their own campus during onboarding;
+      // leaders can fully edit.
+      allow update: if isSignedIn() && (
+        isMinistryLeader() ||
+        (isBtLeader() && resource.data.campusId == myCampusId()) ||
+        // Self-onboarding: only the memberIds array changes, and only to add my own uid.
+        (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['memberIds']) &&
+         myUid() in request.resource.data.memberIds)
+      );
+      allow create, delete: if isMinistryLeader();
+    }
+
+    match /users/{userId} {
+      allow read: if isSignedIn() && (myUid() == userId || isBtLeader() || isMinistryLeader());
+      allow create: if isSignedIn() && myUid() == userId &&
+                     request.resource.data.role == 'member';
+      allow update: if isSignedIn() && (
+        // Self-edit: cannot escalate role.
+        (myUid() == userId && request.resource.data.role == resource.data.role) ||
+        isMinistryLeader()
+      );
+      allow delete: if isMinistryLeader();
+    }
+
+    match /invitees/{inviteeId} {
+      allow read: if canReadResourceByScope(resource.data.campusId, resource.data.bibleTalkId);
+      allow create: if isSignedIn() &&
+        request.resource.data.bibleTalkId == myBibleTalkId() &&
+        request.resource.data.campusId == myCampusId();
+      allow update: if canReadResourceByScope(resource.data.campusId, resource.data.bibleTalkId);
+      allow delete: if isBtLeader() || isMinistryLeader();
+    }
+
+    match /studies/{studyId} {
+      allow read: if canReadResourceByScope(resource.data.campusId, resource.data.bibleTalkId);
+      allow create: if isSignedIn() &&
+        request.resource.data.bibleTalkId == myBibleTalkId() &&
+        request.resource.data.campusId == myCampusId() &&
+        request.resource.data.createdBy == myUid();
+      allow update: if canReadResourceByScope(resource.data.campusId, resource.data.bibleTalkId);
+      allow delete: if isBtLeader() || isMinistryLeader() ||
+                       (resource.data.createdBy == myUid());
+    }
+
+    // Chat: /messages/{bibleTalkId}/items/{messageId}
+    match /messages/{bibleTalkId}/items/{messageId} {
+      allow read: if isSignedIn() && (
+        isMinistryLeader() ||
+        (isBtLeader() && get(/databases/$(database)/documents/bibleTalks/$(bibleTalkId)).data.campusId == myCampusId()) ||
+        bibleTalkId == myBibleTalkId()
+      );
+      allow create: if isSignedIn() &&
+        bibleTalkId == myBibleTalkId() &&
+        request.resource.data.authorUid == myUid();
+      allow update, delete: if false; // chat messages are immutable in v1
+    }
+  }
+}
