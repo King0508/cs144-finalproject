@@ -3,12 +3,12 @@ import type { UserDoc } from "../types/domain";
 import { useStudies } from "../hooks/queries/useStudies";
 import { useInvitees } from "../hooks/queries/useInvitees";
 import { useBibleTalks } from "../hooks/queries/useBibleTalks";
+import { useCampuses } from "../hooks/queries/useCampuses";
 import { useDashboardAggregates } from "../hooks/queries/useDashboardAggregates";
 import { startOfWeek, ONE_DAY_MS } from "../lib/dates";
 import { WeeklyHeatmapCanvas } from "../components/charts/WeeklyHeatmapCanvas";
 import { StatCard } from "../components/charts/StatCard";
 import { GenderStackedBarCard } from "../components/charts/GenderStackedBarCard";
-import { CountCard } from "../components/charts/CountCard";
 import { AskBotPanel } from "../components/dashboard/AskBotPanel";
 import { FollowUpList } from "../components/dashboard/FollowUpList";
 import { MinistryToolsPanel } from "../components/dashboard/MinistryToolsPanel";
@@ -22,12 +22,14 @@ export function Dashboard({ userDoc }: DashboardProps) {
   const { studies } = useStudies(userDoc);
   const { invitees } = useInvitees(userDoc);
   const { bibleTalks } = useBibleTalks(userDoc);
+  const { campuses } = useCampuses();
   const weekStart = useMemo(() => startOfWeek(new Date()), []);
 
-  const { byCampus, bibleTalkRows, studyRows, needsFollowUp } = useDashboardAggregates({
+  const { campusRows, bibleTalkRows, studyRows, needsFollowUp } = useDashboardAggregates({
     studies,
     invitees,
     bibleTalks,
+    campuses,
   });
 
   const weekStartMs = weekStart.getTime();
@@ -73,7 +75,12 @@ export function Dashboard({ userDoc }: DashboardProps) {
         </div>
 
         {userDoc.role === "ministryLeader" ? (
-          <CountCard title="By campus" data={byCampus} emptyHint="No campus activity yet." />
+          <GenderStackedBarCard
+            title="By campus"
+            rows={campusRows}
+            emptyHint="No campus activity yet."
+            headingId="cc-campus-gender"
+          />
         ) : null}
 
         <AskBotPanel />

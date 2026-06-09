@@ -31,6 +31,8 @@ export default {
           DEFAULT: "var(--color-accent)",
           soft: "var(--color-accent-soft)",
         },
+        male: "var(--color-male)",
+        female: "var(--color-female)",
         line: {
           DEFAULT: "var(--color-line)",
           strong: "var(--color-line-strong)",

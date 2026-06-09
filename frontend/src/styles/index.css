@@ -24,6 +24,12 @@
   --color-ink-faint: rgba(15, 15, 17, 0.42);
   --color-accent-soft: rgba(61, 90, 128, 0.12);
   --color-ink-on-ink: #f4f7fb;
+  /* Gender accents — exclusive to dashboard "By _" stacked bars so M vs F
+   * read instantly. Saturated + different lightness keeps them legible at
+   * 1.5px bar height and for color-blind users. Everything else stays on
+   * the disciplined three-color palette above. */
+  --color-male: #2563eb;
+  --color-female: #db2777;
   /* Motion token. Editorial ease — a slow start that settles quickly. */
   --ease-smooth: cubic-bezier(0.2, 0.7, 0.2, 1);
 }

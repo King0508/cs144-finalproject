@@ -121,3 +121,57 @@ Spec is explicit this must be one take with no cuts (so graders can verify it's 
 - **Domain registrar choice** — Cloudflare unless you have an existing account elsewhere.
 - **e2-micro vs e2-small** — start with e2-micro per spec. If pods stick `Pending` (out of memory), the spec explicitly allows `e2-small` with instructor notification.
 - **Whether to use the HPA** — `k8s/hpa.yaml` is committed but the spec asks for *manual* scaling in the demo. Leave HPA applied; just demo `kubectl scale` on camera.
+
+## H. Operations runbook: promoting / demoting users
+
+By default every Google sign-in lands as `role: "member"`. Firestore rules at [`firestore/firestore.rules`](firestore/firestore.rules) deliberately block self-promotion, so changing someone's role always goes through one of these paths.
+
+### Role hierarchy semantics
+
+| Role | Scope (Firestore rules + AskBot tools enforce this) |
+|---|---|
+| `member` | Their single bible talk |
+| `btLeader` | All bible talks within their campus |
+| `ministryLeader` | All campuses |
+
+A user **must have signed into the app once** before any path will work — that's what creates `/users/{uid}` in Firestore. The Auth user is created by the Google popup; the Firestore stub is created on first navigation.
+
+### Path A — `promote` script (preferred, scriptable)
+
+Requires repo access + `backend/service-account.json` on the machine. Implemented at [`backend/scripts/promote.ts`](backend/scripts/promote.ts).
+
+```powershell
+$env:GOOGLE_APPLICATION_CREDENTIALS = ".\backend\service-account.json"
+$env:FIREBASE_PROJECT_ID = "ministry-pwa-king"
+npm -w backend run promote -- new-leader@example.com
+# optional second arg: member | btLeader | ministryLeader (defaults to ministryLeader)
+npm -w backend run promote -- some-user@example.com btLeader
+```
+
+Idempotent — re-running with the same role is a no-op. Tell the user to hard-refresh after; the client picks up the new role on the next `onSnapshot` tick.
+
+### Path B — Firebase Console (no terminal, no code)
+
+Good for one-off promotions or when you don't have the repo handy.
+
+1. [Firebase Console → Authentication](https://console.firebase.google.com/project/ministry-pwa-king/authentication/users) → search for the user's email → copy the UID.
+2. [Firebase Console → Firestore](https://console.firebase.google.com/project/ministry-pwa-king/firestore/data/~2Fusers) → `users/{uid}` → click the `role` field → set it to `member`, `btLeader`, or `ministryLeader`.
+3. (Optional, for btLeader / member) Confirm `campusId` and `bibleTalkId` are set on the same document — without those, the rules will give the user no scope and the app will show empty lists.
+4. Tell the user to hard-refresh.
+
+### Path C — In-app (existing ML promotes another user)
+
+The Firestore rules already permit an existing `ministryLeader` to write `role` on any user document, but **the UI for it isn't wired up today**. The "Send test push" button is currently the only thing in [`frontend/src/components/dashboard/MinistryToolsPanel.tsx`](frontend/src/components/dashboard/MinistryToolsPanel.tsx). Adding a "Manage roles" form is a small, well-scoped follow-up feature — drop a `<select>` next to a user search, write the new role via `updateDoc`, done.
+
+### Demoting
+
+Same paths in reverse — change the role string to `member`. The promote script accepts any of the three role names; no separate `demote` command needed.
+
+### Common errors
+
+| Error | Cause | Fix |
+|---|---|---|
+| `[promote] no Firebase Auth user with that email` | They've never signed in | Ask them to visit the app and complete Google sign-in once, then re-run. |
+| `[promote] /users/{uid} does not exist yet` | They signed in but `useUserDoc` hasn't created the stub | Ask them to navigate to any page after sign-in (the stub creation happens client-side on first read), then re-run. |
+| `Missing or insufficient permissions` writing role in Console | You're signed into Firebase Console with a different Google account than the project owner | Switch to the project owner's account in the top-right Firebase Console menu. |
+| User still sees old nav after promotion | Client cache | Hard-refresh (Ctrl+Shift+R). Firestore `onSnapshot` will deliver the new role within seconds. |

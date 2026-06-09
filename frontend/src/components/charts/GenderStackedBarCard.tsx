@@ -24,11 +24,11 @@ export function GenderStackedBarCard({
         </h2>
         <div className="flex items-center gap-5 text-[11px] uppercase tracking-[0.18em] text-ink-soft">
           <span className="inline-flex items-center gap-2">
-            <span aria-hidden="true" className="inline-block h-2 w-3 bg-ink" />
+            <span aria-hidden="true" className="inline-block h-2 w-3 bg-male" />
             Brothers
           </span>
           <span className="inline-flex items-center gap-2">
-            <span aria-hidden="true" className="inline-block h-2 w-3 bg-accent" />
+            <span aria-hidden="true" className="inline-block h-2 w-3 bg-female" />
             Sisters
           </span>
         </div>
@@ -54,8 +54,8 @@ export function GenderStackedBarCard({
                 role="img"
                 aria-label={`${row.name}: ${row.m} brothers and ${row.f} sisters`}
               >
-                <div className="h-1.5 bg-ink" style={{ width: `${(row.m / max) * 100}%` }} />
-                <div className="h-1.5 bg-accent" style={{ width: `${(row.f / max) * 100}%` }} />
+                <div className="h-1.5 bg-male" style={{ width: `${(row.m / max) * 100}%` }} />
+                <div className="h-1.5 bg-female" style={{ width: `${(row.f / max) * 100}%` }} />
               </div>
             </li>
           ))}

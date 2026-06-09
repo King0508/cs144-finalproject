@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import type { BibleTalk, Invitee, Study } from "../../types/domain";
+import type { BibleTalk, Campus, Invitee, Study } from "../../types/domain";
 
 export interface GenderBarRow {
   id: string;
@@ -10,7 +10,7 @@ export interface GenderBarRow {
 }
 
 export interface DashboardAggregates {
-  byCampus: Map<string, number>;
+  campusRows: GenderBarRow[];
   bibleTalkRows: GenderBarRow[];
   studyRows: GenderBarRow[];
   needsFollowUp: Invitee[];
@@ -20,24 +20,39 @@ interface UseDashboardAggregatesInput {
   studies: Study[];
   invitees: Invitee[];
   bibleTalks: BibleTalk[];
+  campuses: Campus[];
 }
 
 /**
- * Pure derivations from the Dashboard's three live collections. Each
+ * Pure derivations from the Dashboard's four live collections. Each
  * downstream chart can pick the slice it needs without re-deriving on its own.
  */
 export function useDashboardAggregates({
   studies,
   invitees,
   bibleTalks,
+  campuses,
 }: UseDashboardAggregatesInput): DashboardAggregates {
-  const byCampus = useMemo(() => {
-    const map = new Map<string, number>();
-    for (const s of studies) {
-      map.set(s.campusId, (map.get(s.campusId) ?? 0) + 1);
+  const campusRows = useMemo<GenderBarRow[]>(() => {
+    const byId = new Map<string, { id: string; name: string; m: number; f: number }>();
+    for (const c of campuses) {
+      byId.set(c.id, { id: c.id, name: c.name, m: 0, f: 0 });
     }
-    return map;
-  }, [studies]);
+    for (const s of studies) {
+      let row = byId.get(s.campusId);
+      if (!row) {
+        // Mirrors bibleTalkRows: if a study references a campus we don't
+        // have in scope, surface it under the raw id rather than dropping.
+        row = { id: s.campusId, name: s.campusId, m: 0, f: 0 };
+        byId.set(s.campusId, row);
+      }
+      if (s.gender === "M") row.m += 1;
+      else row.f += 1;
+    }
+    return Array.from(byId.values())
+      .map((r) => ({ ...r, total: r.m + r.f }))
+      .sort((a, b) => b.total - a.total);
+  }, [campuses, studies]);
 
   const bibleTalkRows = useMemo<GenderBarRow[]>(() => {
     const byId = new Map<string, { id: string; name: string; m: number; f: number }>();
@@ -94,5 +109,5 @@ export function useDashboardAggregates({
     });
   }, [invitees, studies]);
 
-  return { byCampus, bibleTalkRows, studyRows, needsFollowUp };
+  return { campusRows, bibleTalkRows, studyRows, needsFollowUp };
 }
