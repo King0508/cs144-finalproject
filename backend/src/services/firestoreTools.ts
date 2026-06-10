@@ -1,5 +1,6 @@
 import { db } from "../firebase.js";
 import type { Query } from "firebase-admin/firestore";
+import { laDateToEpochMs } from "../lib/laDates.js";
 
 /**
  * "Tools" the AskBot can call via Gemini function-calling. Each tool runs a
@@ -15,7 +16,9 @@ export interface Scope {
 
 export interface StudyFilters {
   studyName?: string;
-  weekOf?: string;            // YYYY-MM-DD (Monday of the desired week)
+  startDate?: string;         // YYYY-MM-DD, inclusive (LA-anchored)
+  endDate?: string;           // YYYY-MM-DD, exclusive (LA-anchored)
+  weekOf?: string;            // YYYY-MM-DD (Monday of the desired week) — legacy shortcut
   campusId?: string;
   bibleTalkId?: string;
   gender?: "M" | "F";
@@ -48,13 +51,29 @@ function buildStudiesQuery(filters: StudyFilters) {
   if (filters.studyName) q = q.where("studyName", "==", filters.studyName);
   if (filters.gender) q = q.where("gender", "==", filters.gender);
   if (filters.status) q = q.where("status", "==", filters.status);
-  if (filters.weekOf) {
-    const start = new Date(filters.weekOf + "T00:00:00").getTime();
-    if (!Number.isNaN(start)) {
-      const end = start + 7 * 24 * 60 * 60 * 1000;
-      q = q.where("scheduledAt", ">=", start).where("scheduledAt", "<", end);
+
+  // Resolve an explicit [startDate, endDate) range, falling back to weekOf
+  // (a Monday-anchored 7-day window) for backward compatibility. All bounds
+  // are interpreted at LA-local midnight so they match the app's calendar.
+  let start: number | undefined;
+  let end: number | undefined;
+  if (filters.startDate) {
+    const s = laDateToEpochMs(filters.startDate);
+    if (!Number.isNaN(s)) start = s;
+  }
+  if (filters.endDate) {
+    const e = laDateToEpochMs(filters.endDate);
+    if (!Number.isNaN(e)) end = e;
+  }
+  if (start === undefined && end === undefined && filters.weekOf) {
+    const weekStart = laDateToEpochMs(filters.weekOf);
+    if (!Number.isNaN(weekStart)) {
+      start = weekStart;
+      end = weekStart + 7 * 24 * 60 * 60 * 1000;
     }
   }
+  if (start !== undefined) q = q.where("scheduledAt", ">=", start);
+  if (end !== undefined) q = q.where("scheduledAt", "<", end);
   return q;
 }
 

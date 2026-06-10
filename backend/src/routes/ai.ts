@@ -2,7 +2,7 @@ import { Router } from "express";
 import { z } from "zod";
 import { db } from "../firebase.js";
 import { nextStudyName, CURRICULUM } from "../curriculum.js";
-import { askGemini, generateFollowUpMessage } from "../services/gemini.js";
+import { askGemini, generateFollowUpMessage, classifyGeminiError } from "../services/gemini.js";
 import type { AuthedRequest } from "../middleware/verifyFirebaseToken.js";
 
 const router: Router = Router();
@@ -47,7 +47,7 @@ router.post("/next-study", async (req: AuthedRequest, res) => {
       inviteeName: data.name,
       completedStudy: completed,
       nextStudy: next,
-      leadName: user.email?.split("@")[0] ?? "your bible-talk leader",
+      leadName: user.displayName ?? user.email?.split("@")[0] ?? "your bible-talk leader",
     });
 
     res.json({ nextStudyName: next, suggestedMessage: message });
@@ -57,13 +57,14 @@ router.post("/next-study", async (req: AuthedRequest, res) => {
       return;
     }
     console.error("[ai/next-study]", err);
+    const { httpStatus, message } = classifyGeminiError(err);
     const details =
       process.env.NODE_ENV === "production"
         ? undefined
         : err instanceof Error
           ? err.message
           : String(err);
-    res.status(500).json({ error: "AI request failed.", details });
+    res.status(httpStatus).json({ error: message, details });
   }
 });
 
@@ -85,13 +86,14 @@ router.post("/ask", async (req: AuthedRequest, res) => {
       return;
     }
     console.error("[ai/ask]", err);
+    const { httpStatus, message } = classifyGeminiError(err);
     const details =
       process.env.NODE_ENV === "production"
         ? undefined
         : err instanceof Error
           ? err.message
           : String(err);
-    res.status(500).json({ error: "AI request failed.", details });
+    res.status(httpStatus).json({ error: message, details });
   }
 });
 

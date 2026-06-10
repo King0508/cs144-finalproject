@@ -6,9 +6,9 @@ CS 144 final project (Spring 2026) — Prof. Rosario.
 
 ## Quick links
 
-- [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — system architecture, components, data flow
-- [`docs/REQUIREMENTS.md`](docs/REQUIREMENTS.md) — rubric-by-rubric mapping + AI usage itemization
-- [`docs/DATABASE.md`](docs/DATABASE.md) — Firestore collection shapes, indexes, security-rule summary
+- [`ARCHITECTURE.md`](ARCHITECTURE.md) — system architecture, components, data flow
+- [`REQUIREMENTS.md`](REQUIREMENTS.md) — rubric-by-rubric mapping + AI usage itemization
+- [`DATABASE.md`](DATABASE.md) — Firestore collection shapes, indexes, security-rule summary
 - [`docs/SETUP.md`](docs/SETUP.md) — full GCP / Firebase / GKE setup walkthrough
 
 ## What it does

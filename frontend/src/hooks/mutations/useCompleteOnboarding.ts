@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { arrayUnion, doc, updateDoc } from "firebase/firestore";
+import { arrayUnion, doc, writeBatch } from "firebase/firestore";
 import { getFirebase } from "../../store/firebase";
 
 export interface UseCompleteOnboardingResult {
@@ -20,11 +20,14 @@ export function useCompleteOnboarding(): UseCompleteOnboardingResult {
         if (!campusId || !bibleTalkId) {
           throw new Error("Pick a campus and bible talk to continue.");
         }
+        // Atomic batched write: either both the profile fields land AND the
+        // user joins the bible talk's memberIds, or neither does. Avoids the
+        // partial state where a user is in memberIds without scope fields set.
         const { db } = getFirebase();
-        await updateDoc(doc(db, "users", uid), { campusId, bibleTalkId });
-        await updateDoc(doc(db, "bibleTalks", bibleTalkId), {
-          memberIds: arrayUnion(uid),
-        });
+        const batch = writeBatch(db);
+        batch.update(doc(db, "users", uid), { campusId, bibleTalkId });
+        batch.update(doc(db, "bibleTalks", bibleTalkId), { memberIds: arrayUnion(uid) });
+        await batch.commit();
       } catch (err) {
         setError(err instanceof Error ? err.message : "Save failed.");
         throw err;

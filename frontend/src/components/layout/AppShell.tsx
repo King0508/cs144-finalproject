@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { NavLink, Outlet, useLocation } from "react-router-dom";
 import {
   BarChart3,
@@ -89,6 +90,16 @@ export function AppShell({ userDoc }: AppShellProps) {
   const location = useLocation();
   const pageTitle = pageTitleFromPath(location.pathname);
   const allNav = [...PRIMARY_NAV, SETTINGS_NAV];
+
+  // Keep the document title in sync with the active route. Even though this is
+  // an SPA (no full reloads), updating <title> per view aids bookmarks, browser
+  // history, and screen-reader page announcements.
+  useEffect(() => {
+    document.title =
+      pageTitle === "Restored Church Campus Ministry"
+        ? pageTitle
+        : `${pageTitle} · Restored Church Campus Ministry`;
+  }, [pageTitle]);
 
   return (
     <div className="min-h-screen bg-bg text-ink">

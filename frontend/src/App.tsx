@@ -1,16 +1,8 @@
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
-import { useEffect } from "react";
+import { Suspense, lazy, useEffect } from "react";
 import { useAuth } from "./hooks/auth/useAuth";
 import { useUserDoc } from "./hooks/auth/useUserDoc";
 import { useOnboardingGate } from "./hooks/auth/useOnboardingGate";
-import { Login } from "./pages/Login";
-import { Onboarding } from "./pages/Onboarding";
-import { BibleTalkChat } from "./pages/BibleTalkChat";
-import { Studies } from "./pages/Studies";
-import { InviteeProfile } from "./pages/InviteeProfile";
-import { Calendar } from "./pages/Calendar";
-import { Dashboard } from "./pages/Dashboard";
-import { Settings } from "./pages/Settings";
 import { AppShell } from "./components/layout/AppShell";
 import { ConsentBanner } from "./components/layout/ConsentBanner";
 import { OfflineBanner } from "./components/layout/OfflineBanner";
@@ -18,6 +10,19 @@ import { LoadingScreen } from "./components/layout/LoadingScreen";
 import { UserDocErrorScreen } from "./components/layout/UserDocErrorScreen";
 import { installAutoFlush } from "./store/offlineQueue";
 import { processQueuedWrite } from "./store/queueProcessor";
+import { subscribeServerEvents } from "./store/sse";
+
+// Route-level code splitting: each page ships in its own lazily-loaded chunk so
+// the initial SPA bundle stays small. These components are named exports, so we
+// remap them to the default export shape React.lazy expects.
+const Login = lazy(() => import("./pages/Login").then((m) => ({ default: m.Login })));
+const Onboarding = lazy(() => import("./pages/Onboarding").then((m) => ({ default: m.Onboarding })));
+const BibleTalkChat = lazy(() => import("./pages/BibleTalkChat").then((m) => ({ default: m.BibleTalkChat })));
+const Studies = lazy(() => import("./pages/Studies").then((m) => ({ default: m.Studies })));
+const InviteeProfile = lazy(() => import("./pages/InviteeProfile").then((m) => ({ default: m.InviteeProfile })));
+const Calendar = lazy(() => import("./pages/Calendar").then((m) => ({ default: m.Calendar })));
+const Dashboard = lazy(() => import("./pages/Dashboard").then((m) => ({ default: m.Dashboard })));
+const Settings = lazy(() => import("./pages/Settings").then((m) => ({ default: m.Settings })));
 
 export function App() {
   const { user: authUser, loading: authLoading } = useAuth();
@@ -28,6 +33,29 @@ export function App() {
   useEffect(() => {
     return installAutoFlush(processQueuedWrite);
   }, []);
+
+  // Live server-initiated events over SSE (the foreground complement to Web
+  // Push). While the tab is open we surface them as a notification if the user
+  // granted permission, otherwise we hand them to any in-app listener.
+  useEffect(() => {
+    if (!authUser) return;
+    return subscribeServerEvents((event) => {
+      window.dispatchEvent(new CustomEvent("ministry:server-event", { detail: event }));
+      const canNotify =
+        "Notification" in window &&
+        Notification.permission === "granted" &&
+        document.visibilityState === "visible";
+      if (canNotify) {
+        try {
+          new Notification(event.title ?? "Campus Ministry", { body: event.body });
+        } catch {
+          /* Some browsers require ServiceWorkerRegistration.showNotification. */
+        }
+      } else {
+        console.info("[sse] server event", event);
+      }
+    });
+  }, [authUser]);
 
   // Focus management: move keyboard focus to <main> when the route changes,
   // so screen-reader users hear the new page.
@@ -57,10 +85,12 @@ export function App() {
     return (
       <>
         <ConsentBanner />
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="*" element={<Navigate to="/login" replace />} />
-        </Routes>
+        <Suspense fallback={<LoadingScreen />}>
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="*" element={<Navigate to="/login" replace />} />
+          </Routes>
+        </Suspense>
       </>
     );
   }
@@ -80,20 +110,22 @@ export function App() {
   return (
     <>
       <OfflineBanner />
-      <Routes>
-        <Route path="/onboarding" element={<Onboarding userDoc={userDoc!} />} />
-        <Route element={<AppShell userDoc={userDoc!} />}>
-          <Route path="/" element={<Navigate to="/chat" replace />} />
-          <Route path="/chat" element={<BibleTalkChat userDoc={userDoc!} />} />
-          <Route path="/studies" element={<Studies userDoc={userDoc!} />} />
-          <Route path="/invitees/:inviteeId" element={<InviteeProfile userDoc={userDoc!} />} />
-          <Route path="/calendar" element={<Calendar userDoc={userDoc!} />} />
-          <Route path="/dashboard" element={<Dashboard userDoc={userDoc!} />} />
-          <Route path="/settings" element={<Settings userDoc={userDoc!} />} />
-        </Route>
-        <Route path="/login" element={<Navigate to="/" replace />} />
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
+      <Suspense fallback={<LoadingScreen />}>
+        <Routes>
+          <Route path="/onboarding" element={<Onboarding userDoc={userDoc!} />} />
+          <Route element={<AppShell userDoc={userDoc!} />}>
+            <Route path="/" element={<Navigate to="/chat" replace />} />
+            <Route path="/chat" element={<BibleTalkChat userDoc={userDoc!} />} />
+            <Route path="/studies" element={<Studies userDoc={userDoc!} />} />
+            <Route path="/invitees/:inviteeId" element={<InviteeProfile userDoc={userDoc!} />} />
+            <Route path="/calendar" element={<Calendar userDoc={userDoc!} />} />
+            <Route path="/dashboard" element={<Dashboard userDoc={userDoc!} />} />
+            <Route path="/settings" element={<Settings userDoc={userDoc!} />} />
+          </Route>
+          <Route path="/login" element={<Navigate to="/" replace />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </Suspense>
     </>
   );
 }

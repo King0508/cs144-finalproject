@@ -5,6 +5,7 @@ export interface AuthedRequest extends Request {
   authUser?: {
     uid: string;
     email: string | null;
+    displayName: string | null;
     role: "member" | "btLeader" | "ministryLeader";
     campusId?: string;
     bibleTalkId?: string;
@@ -47,10 +48,13 @@ export async function verifyFirebaseToken(
       role?: "member" | "btLeader" | "ministryLeader";
       campusId?: string;
       bibleTalkId?: string;
+      name?: string;
+      displayName?: string;
     };
     req.authUser = {
       uid: decoded.uid,
       email: decoded.email ?? null,
+      displayName: data.displayName ?? data.name ?? decoded.name ?? null,
       role: data.role ?? "member",
       campusId: data.campusId,
       bibleTalkId: data.bibleTalkId,

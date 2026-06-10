@@ -5,6 +5,7 @@ import cors from "cors";
 import rateLimit from "express-rate-limit";
 import aiRouter from "./routes/ai.js";
 import notifyRouter from "./routes/notify.js";
+import streamRouter from "./routes/stream.js";
 import devRouter from "./routes/dev.js";
 import { verifyFirebaseToken } from "./middleware/verifyFirebaseToken.js";
 import { startScheduler } from "./services/scheduler.js";
@@ -20,9 +21,20 @@ app.get("/healthz", (_req, res) => res.json({ ok: true, uptime: process.uptime()
 app.get("/readyz", (_req, res) => res.json({ ok: true }));
 
 // --- Global security middleware ------------------------------------------------
+// The API only ever emits JSON, so it can ship the strictest possible CSP
+// (`default-src 'none'`) — there is no document, script, or style to load from
+// an API response. The SPA itself is served by nginx with its own, looser CSP.
+// Helmet also sets HSTS, nosniff, frameguard, and hides x-powered-by.
 app.use(
   helmet({
-    contentSecurityPolicy: false, // SPA is served by nginx with its own CSP.
+    contentSecurityPolicy: {
+      useDefaults: false,
+      directives: {
+        "default-src": ["'none'"],
+        "frame-ancestors": ["'none'"],
+        "base-uri": ["'none'"],
+      },
+    },
     crossOriginEmbedderPolicy: false,
   }),
 );
@@ -54,6 +66,33 @@ app.use(
 
 app.use(express.json({ limit: "32kb" }));
 
+// --- CSRF defense-in-depth -----------------------------------------------------
+// The API is bearer-token-only and sets no ambient cookie, so classic CSRF does
+// not apply. We still enforce an explicit same-origin check on every state-
+// changing request: a cross-site Origin (or a Sec-Fetch-Site of "cross-site")
+// is rejected before it reaches a handler. Safe methods and origin-less callers
+// (curl, server-to-server, same-origin fetches that omit Origin) are allowed.
+const SAFE_METHODS = new Set(["GET", "HEAD", "OPTIONS"]);
+
+function sameOriginGuard(req: express.Request, res: express.Response, next: express.NextFunction) {
+  if (SAFE_METHODS.has(req.method)) return next();
+
+  if (req.get("sec-fetch-site") === "cross-site") {
+    return res.status(403).json({ error: "Cross-site request blocked." });
+  }
+
+  const origin = req.get("origin");
+  if (origin) {
+    const allowedOrigin =
+      allowed.includes(origin) || (isDev && LOCALHOST_RE.test(origin));
+    if (!allowedOrigin) {
+      return res.status(403).json({ error: "Cross-origin request blocked." });
+    }
+  }
+
+  return next();
+}
+
 const apiLimiter = rateLimit({
   windowMs: 60_000,
   max: 60, // 60 req/min per IP
@@ -61,8 +100,13 @@ const apiLimiter = rateLimit({
   legacyHeaders: false,
 });
 
+// --- Server-Sent Events stream (second server-initiated channel) ---------------
+// Mounted before the Bearer-token middleware: EventSource cannot send headers,
+// so this route authenticates a query-string token itself (see routes/stream.ts).
+app.use("/api/stream", apiLimiter, streamRouter);
+
 // --- Authenticated API routes --------------------------------------------------
-app.use("/api", apiLimiter, verifyFirebaseToken);
+app.use("/api", apiLimiter, sameOriginGuard, verifyFirebaseToken);
 app.use("/api/ai", aiRouter);
 app.use("/api/notify", notifyRouter);
 

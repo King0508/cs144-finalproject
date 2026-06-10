@@ -1,4 +1,5 @@
 import { db, messaging } from "../firebase.js";
+import { broadcast } from "./sse.js";
 
 /**
  * Background loop that fires reminder pushes 15 (configurable) minutes before
@@ -72,14 +73,14 @@ async function runOnce(leadMinutes: number): Promise<void> {
     }
     const unique = Array.from(new Set(tokens));
 
+    const title = `Bible study in ${leadMinutes} minutes`;
+    const body = `${s.studyName} with ${s.inviteeName}${s.location ? ` · ${s.location}` : ""}`;
+
     if (unique.length > 0) {
       try {
         await messaging().sendEachForMulticast({
           tokens: unique,
-          notification: {
-            title: `Bible study in ${leadMinutes} minutes`,
-            body: `${s.studyName} with ${s.inviteeName}${s.location ? ` · ${s.location}` : ""}`,
-          },
+          notification: { title, body },
           data: { url: "/calendar", studyId: doc.id, kind: "reminder" },
           webpush: { fcmOptions: { link: "/calendar" } },
         });
@@ -87,6 +88,14 @@ async function runOnce(leadMinutes: number): Promise<void> {
         console.warn("[scheduler] push failed for study", doc.id, err);
       }
     }
+
+    // Also emit the reminder over SSE, scoped to the owning bible talk so only
+    // in-scope foreground clients receive it.
+    broadcast({
+      type: "reminder",
+      payload: { title, body, url: "/calendar", studyId: doc.id },
+      bibleTalkId: s.bibleTalkId,
+    });
 
     // Mark even if there were no tokens, so we don't churn on it forever.
     await doc.ref.update({ reminderSent: true });

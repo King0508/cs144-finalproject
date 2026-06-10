@@ -2,8 +2,10 @@ import { initializeApp, type FirebaseApp } from "firebase/app";
 import {
   getAuth,
   GoogleAuthProvider,
+  getRedirectResult,
   onAuthStateChanged,
   signInWithPopup,
+  signInWithRedirect,
   signOut,
   type User,
 } from "firebase/auth";
@@ -48,10 +50,44 @@ export function getFirebaseAuth() {
   return getAuth(getFirebase().app);
 }
 
-export async function signInWithGoogle(): Promise<User> {
+// Errors where a popup can't be used and we should fall back to a full-page
+// redirect (common on browsers that block popups, or with strict COOP).
+const REDIRECT_FALLBACK_CODES = new Set([
+  "auth/popup-blocked",
+  "auth/popup-closed-by-user",
+  "auth/cancelled-popup-request",
+  "auth/operation-not-supported-in-this-environment",
+]);
+
+export async function signInWithGoogle(): Promise<User | void> {
   const provider = new GoogleAuthProvider();
-  const result = await signInWithPopup(getFirebaseAuth(), provider);
-  return result.user;
+  const auth = getFirebaseAuth();
+  try {
+    const result = await signInWithPopup(auth, provider);
+    return result.user;
+  } catch (err) {
+    const code = (err as { code?: string }).code ?? "";
+    if (REDIRECT_FALLBACK_CODES.has(code)) {
+      // Navigates away to Google and back; onAuthStateChanged resolves the
+      // signed-in user on return (also surfaced via completeRedirectSignIn).
+      await signInWithRedirect(auth, provider);
+      return;
+    }
+    throw err;
+  }
+}
+
+/**
+ * Completes a redirect-based sign-in if one is pending. Safe to call on every
+ * app load; returns the user when a redirect just completed, otherwise null.
+ */
+export async function completeRedirectSignIn(): Promise<User | null> {
+  try {
+    const result = await getRedirectResult(getFirebaseAuth());
+    return result?.user ?? null;
+  } catch {
+    return null;
+  }
 }
 
 export async function signOutCurrent(): Promise<void> {

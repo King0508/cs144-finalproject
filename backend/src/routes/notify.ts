@@ -3,6 +3,7 @@ import { z } from "zod";
 import { FieldValue } from "firebase-admin/firestore";
 import { db, messaging } from "../firebase.js";
 import { requireMinistryLeader, type AuthedRequest } from "../middleware/verifyFirebaseToken.js";
+import { broadcast } from "../services/sse.js";
 
 const router: Router = Router();
 
@@ -46,18 +47,25 @@ router.post("/test", requireMinistryLeader, async (req: AuthedRequest, res) => {
       return;
     }
     const triggeredBy = req.authUser!.email ?? req.authUser!.uid;
+    const title = "Campus Ministry — test push";
+    const body = `Server push sent by ${triggeredBy}.`;
     const result = await messaging().sendEachForMulticast({
       tokens: unique,
-      notification: {
-        title: "Campus Ministry — test push",
-        body: `Server push sent by ${triggeredBy}.`,
-      },
+      notification: { title, body },
       data: { url: "/dashboard", kind: "test" },
       webpush: {
         fcmOptions: { link: "/dashboard" },
       },
     });
-    res.json({ ok: true, delivered: result.successCount });
+
+    // Mirror the same server-initiated event over the SSE channel so foreground
+    // clients see it live without relying on OS push permission.
+    const streamed = broadcast({
+      type: "notification",
+      payload: { title, body, url: "/dashboard", kind: "test" },
+    });
+
+    res.json({ ok: true, delivered: result.successCount, streamed });
   } catch (err) {
     console.error("[notify/test]", err);
     res.status(500).json({ error: "Send failed." });

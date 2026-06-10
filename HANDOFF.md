@@ -102,7 +102,7 @@ Spec is explicit this must be one take with no cuts (so graders can verify it's 
 4. **Studies page** — create a new study (form validation, Firestore write).
 5. **Calendar** — drag a study card to a different day/hour. Briefly demo keyboard fallback (Shift + arrow keys) to cover the accessibility requirement.
 6. **Dashboard** — show the canvas heatmap, hover for tooltip. Ask MinistryBot a question like "How many studies this week?". Open an invitee and show the AI follow-up message suggestion.
-7. **PWA offline** — DevTools → Network → Offline. Send a chat message (queues to IndexedDB → see [`frontend/src/lib/offlineQueue.ts`](frontend/src/lib/offlineQueue.ts)). Toggle Online. Watch the queued message flush.
+7. **PWA offline** — DevTools → Network → Offline. Send a chat message (queues to IndexedDB → see [`frontend/src/store/offlineQueue.ts`](frontend/src/store/offlineQueue.ts)). Toggle Online. Watch the queued message flush.
 8. **Server push** — click "Send test push" on the dashboard (ML-only button). Notification lands on screen.
 9. **GKE self-healing** — switch to terminal: `kubectl -n ministry delete pod -l app=backend --force --grace-period=0`. Then `kubectl -n ministry get pods -w` and show the ReplicaSet recreating the pod in ~15s.
 10. **Manual scaling** — `kubectl -n ministry scale deploy/backend --replicas=4` then `kubectl -n ministry get pods`. Scale back: `kubectl -n ministry scale deploy/backend --replicas=2`.
