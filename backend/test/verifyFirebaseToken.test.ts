@@ -47,7 +47,7 @@ describe("verifyFirebaseToken", () => {
     const next = vi.fn();
     await verifyFirebaseToken(req, res, next);
     expect(res._status).toBe(401);
-    expect(next).not.toHaveBeenCalled();
+    expect(next).toHaveBeenCalledTimes(0);
   });
 
   it("401s on a bad token", async () => {
@@ -56,7 +56,7 @@ describe("verifyFirebaseToken", () => {
     const next = vi.fn();
     await verifyFirebaseToken(req, res, next);
     expect(res._status).toBe(401);
-    expect(next).not.toHaveBeenCalled();
+    expect(next).toHaveBeenCalledTimes(0);
   });
 
   it("calls next() and attaches authUser on a good token", async () => {

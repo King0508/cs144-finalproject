@@ -23,6 +23,7 @@ const InviteeProfile = lazy(() => import("./pages/InviteeProfile").then((m) => (
 const Calendar = lazy(() => import("./pages/Calendar").then((m) => ({ default: m.Calendar })));
 const Dashboard = lazy(() => import("./pages/Dashboard").then((m) => ({ default: m.Dashboard })));
 const Settings = lazy(() => import("./pages/Settings").then((m) => ({ default: m.Settings })));
+const NotFound = lazy(() => import("./pages/NotFound").then((m) => ({ default: m.NotFound })));
 
 export function App() {
   const { user: authUser, loading: authLoading } = useAuth();
@@ -119,12 +120,13 @@ export function App() {
             <Route path="/studies" element={<Studies userDoc={userDoc!} />} />
             <Route path="/invitees/:inviteeId" element={<InviteeProfile userDoc={userDoc!} />} />
             <Route path="/calendar" element={<Calendar userDoc={userDoc!} />} />
-            <Route path="/dashboard" element={<Dashboard userDoc={userDoc!} />} />
-            <Route path="/settings" element={<Settings userDoc={userDoc!} />} />
-          </Route>
-          <Route path="/login" element={<Navigate to="/" replace />} />
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
+          <Route path="/dashboard" element={<Dashboard userDoc={userDoc!} />} />
+          <Route path="/settings" element={<Settings userDoc={userDoc!} />} />
+          {/* Real 404 inside the shell so nav stays available. */}
+          <Route path="*" element={<NotFound />} />
+        </Route>
+        <Route path="/login" element={<Navigate to="/" replace />} />
+      </Routes>
       </Suspense>
     </>
   );

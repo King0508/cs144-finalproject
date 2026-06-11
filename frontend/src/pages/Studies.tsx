@@ -66,7 +66,7 @@ function parseCurriculumFilter(raw: string): CurriculumFilterValue | null {
 export function Studies({ userDoc }: StudiesProps) {
   const { studies, loading } = useStudies(userDoc);
   const { invitees } = useInvitees(userDoc);
-  const completeStudy = useCompleteStudy(invitees);
+  const completeStudy = useCompleteStudy();
   const [editing, setEditing] = useState<Study | null>(null);
   const [creating, setCreating] = useState(false);
 

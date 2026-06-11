@@ -1,5 +1,9 @@
-import admin from "firebase-admin";
-import type { App } from "firebase-admin/app";
+import {
+  applicationDefault,
+  getApps,
+  initializeApp,
+  type App,
+} from "firebase-admin/app";
 import { getFirestore, type Firestore } from "firebase-admin/firestore";
 import { getMessaging, type Messaging } from "firebase-admin/messaging";
 import { getAuth, type Auth } from "firebase-admin/auth";
@@ -17,16 +21,17 @@ let app: App | null = null;
  */
 export function getApp(): App {
   if (app) return app;
-  if (admin.apps.length > 0) {
-    app = admin.apps[0] as App;
+  const existing = getApps();
+  if (existing.length > 0) {
+    app = existing[0]!;
     return app;
   }
   const projectId = process.env.FIREBASE_PROJECT_ID;
   if (!projectId) {
     throw new Error("FIREBASE_PROJECT_ID env var is required.");
   }
-  app = admin.initializeApp({
-    credential: admin.credential.applicationDefault(),
+  app = initializeApp({
+    credential: applicationDefault(),
     projectId,
   });
   return app;

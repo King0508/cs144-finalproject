@@ -165,4 +165,4 @@ See [`docs/SETUP.md`](docs/SETUP.md) for the one-time GCP setup (creating the cl
 
 ## License
 
-This is a class project. All rights reserved.
+Coursework for CS 144 (Prof. Rosario). All rights reserved — see [`LICENSE`](LICENSE).
