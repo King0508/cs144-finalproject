@@ -18,7 +18,10 @@ export interface RegisterFcmTokenResponse {
 
 export interface TestPushResponse {
   ok: true;
+  /** Number of devices reached via Web Push (FCM). */
   delivered: number;
+  /** Number of connected browsers reached live via the SSE channel. */
+  streamed?: number;
 }
 
 export interface DevSetRoleResponse {

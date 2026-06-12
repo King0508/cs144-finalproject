@@ -47,7 +47,7 @@ Sentence-per-bullet mapping from the project spec to where it lives in this repo
 
 ## AI
 
-- **Provider** — Gemini 2.5 Flash via `@google/generative-ai`. Free tier covers all class-demo traffic.
+- **Provider** — Gemini 2.5 Flash-Lite via `@google/generative-ai` (default; configurable to Gemini 2.5 Flash via the `GEMINI_MODEL` env var — see [`backend/src/services/gemini.ts`](backend/src/services/gemini.ts)). Free tier covers all class-demo traffic.
 - **Two features behind `/api/ai/*`** — both Firebase-token-gated, rate-limited, Zod-validated.
 
   1. **`/api/ai/next-study`** ([`routes/ai.ts`](backend/src/routes/ai.ts)) — given an `inviteeId`, looks up the invitee's `currentStudyIndex`, computes the next curriculum step, and asks Gemini for a 1–2 sentence personalised follow-up message the leader can paste in chat. Surfaced on the Invitee Profile and on the dashboard "Needs follow-up" list.

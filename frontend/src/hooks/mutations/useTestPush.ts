@@ -16,7 +16,11 @@ export function useTestPush(): UseTestPushResult {
     setMessage(null);
     try {
       const res = await api.sendTestPush();
-      setMessage(`Sent to ${res.delivered} device${res.delivered === 1 ? "" : "s"}.`);
+      const live = res.streamed ?? 0;
+      const push = res.delivered;
+      setMessage(
+        `Server notification sent — ${live} live (SSE), ${push} via Web Push.`,
+      );
     } catch (e) {
       setMessage(e instanceof Error ? e.message : "Failed.");
     } finally {

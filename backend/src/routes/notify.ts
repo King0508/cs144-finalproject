@@ -35,6 +35,19 @@ router.post("/register", async (req: AuthedRequest, res) => {
  */
 router.post("/test", requireMinistryLeader, async (req: AuthedRequest, res) => {
   try {
+    const triggeredBy = req.authUser!.email ?? req.authUser!.uid;
+    const title = "Campus Ministry — test push";
+    const body = `Server push sent by ${triggeredBy}.`;
+
+    // Broadcast over the SSE channel first, unconditionally. This is a
+    // standalone server-initiated notification channel and must not depend on
+    // whether any device has registered an FCM Web Push token.
+    const streamed = broadcast({
+      type: "notification",
+      payload: { title, body, url: "/dashboard", kind: "test" },
+    });
+
+    // Best-effort Web Push to any registered devices (in addition to SSE).
     const snap = await db().collection("users").get();
     const tokens: string[] = [];
     snap.forEach((d) => {
@@ -42,30 +55,20 @@ router.post("/test", requireMinistryLeader, async (req: AuthedRequest, res) => {
       if (Array.isArray(data.fcmTokens)) tokens.push(...data.fcmTokens);
     });
     const unique = Array.from(new Set(tokens));
-    if (unique.length === 0) {
-      res.json({ ok: true, delivered: 0 });
-      return;
+    let delivered = 0;
+    if (unique.length > 0) {
+      const result = await messaging().sendEachForMulticast({
+        tokens: unique,
+        notification: { title, body },
+        data: { url: "/dashboard", kind: "test" },
+        webpush: {
+          fcmOptions: { link: "/dashboard" },
+        },
+      });
+      delivered = result.successCount;
     }
-    const triggeredBy = req.authUser!.email ?? req.authUser!.uid;
-    const title = "Campus Ministry — test push";
-    const body = `Server push sent by ${triggeredBy}.`;
-    const result = await messaging().sendEachForMulticast({
-      tokens: unique,
-      notification: { title, body },
-      data: { url: "/dashboard", kind: "test" },
-      webpush: {
-        fcmOptions: { link: "/dashboard" },
-      },
-    });
 
-    // Mirror the same server-initiated event over the SSE channel so foreground
-    // clients see it live without relying on OS push permission.
-    const streamed = broadcast({
-      type: "notification",
-      payload: { title, body, url: "/dashboard", kind: "test" },
-    });
-
-    res.json({ ok: true, delivered: result.successCount, streamed });
+    res.json({ ok: true, delivered, streamed });
   } catch (err) {
     console.error("[notify/test]", err);
     res.status(500).json({ error: "Send failed." });

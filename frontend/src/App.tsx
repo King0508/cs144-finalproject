@@ -6,6 +6,7 @@ import { useOnboardingGate } from "./hooks/auth/useOnboardingGate";
 import { AppShell } from "./components/layout/AppShell";
 import { ConsentBanner } from "./components/layout/ConsentBanner";
 import { OfflineBanner } from "./components/layout/OfflineBanner";
+import { ServerEventToast } from "./components/layout/ServerEventToast";
 import { LoadingScreen } from "./components/layout/LoadingScreen";
 import { UserDocErrorScreen } from "./components/layout/UserDocErrorScreen";
 import { installAutoFlush } from "./store/offlineQueue";
@@ -111,6 +112,7 @@ export function App() {
   return (
     <>
       <OfflineBanner />
+      <ServerEventToast />
       <Suspense fallback={<LoadingScreen />}>
         <Routes>
           <Route path="/onboarding" element={<Onboarding userDoc={userDoc!} />} />

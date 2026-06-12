@@ -14,9 +14,14 @@ export function useEnablePush(): UseEnablePushResult {
   async function enable(): Promise<void> {
     setBusy(true);
     setMessage(null);
-    const res = await enablePush();
-    setMessage(res.ok ? "Notifications enabled." : `Couldn't enable: ${res.reason}`);
-    setBusy(false);
+    try {
+      const res = await enablePush();
+      setMessage(res.ok ? "Notifications enabled." : `Couldn't enable: ${res.reason}`);
+    } catch (err) {
+      setMessage(err instanceof Error ? `Couldn't enable: ${err.message}` : "Couldn't enable.");
+    } finally {
+      setBusy(false);
+    }
   }
 
   return { enable, busy, message };

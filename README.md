@@ -17,7 +17,7 @@ CS 144 final project (Spring 2026) — Prof. Rosario.
 - **Bible-study scheduling** — create studies with a curriculum study name, date/time, location, Lead, and one or more Supports. Edit any field inline.
 - **Weekly calendar** — Google-Calendar-style week view. Drag a study to a new day/hour to reschedule. Keyboard fallback: focus a study and use Shift + arrow keys.
 - **Dashboard** — counts per bible talk, per campus, per study. Centerpiece is a hand-drawn **HTML5 Canvas weekly heatmap** showing when studies happen across the week (hue = time of day, intensity = study count).
-- **AI assistants** (Gemini 2.5 Flash)
+- **AI assistants** (Gemini 2.5 Flash-Lite, configurable to Gemini 2.5 Flash via `GEMINI_MODEL`)
   - **Next-study suggestions** — for any invitee, the app surfaces the next study in the curriculum and Gemini drafts a warm follow-up message the leader can paste in chat.
   - **Ask MinistryBot** — natural-language Q&A using Gemini function-calling over typed Firestore queries. Try "How many Light and Darkness studies this week and what are their names?" Role-scoped: ministry leaders see everything; bible-talk leaders see their campus; members see their bible talk.
 - **PWA** — installable on desktop and mobile, works offline, server-initiated Web Push notifications via Firebase Cloud Messaging.
@@ -32,7 +32,7 @@ CS 144 final project (Spring 2026) — Prof. Rosario.
 | Notifications | Firebase Cloud Messaging (Web Push)                                   |
 | Backend      | Node.js 22 + Express + TypeScript (Helmet, Zod, express-rate-limit)   |
 | Auth         | Firebase Authentication (Google sign-in) — token verified by Admin SDK |
-| AI           | Gemini 2.5 Flash via `@google/generative-ai` (incl. function-calling) |
+| AI           | Gemini 2.5 Flash-Lite via `@google/generative-ai` (incl. function-calling; configurable via `GEMINI_MODEL`) |
 | Database     | Firestore (native mode)                                               |
 | Container    | Docker (multi-stage builds, frontend served by nginx)                 |
 | Orchestration | Google Kubernetes Engine (GKE) — 2× e2-micro nodes, 2 replicas per Deployment |
@@ -126,10 +126,12 @@ See [`docs/SETUP.md`](docs/SETUP.md) for the one-time GCP setup (creating the cl
 ```
 /frontend                React + Vite + TS + Tailwind PWA
   src/
-    pages/               Login, Onboarding, BibleTalkChat, Studies, InviteeProfile, Calendar, Dashboard, Settings
-    components/          AppShell, StudyForm, Modal, WeeklyCalendar (drag+drop), WeeklyHeatmapCanvas, AskBotPanel, ConsentBanner, OfflineBanner
-    hooks/               useAuth, useUserDoc, useStudies, useInvitees, useBibleTalkMembers
-    lib/                 firebase.ts, api.ts, push.ts, offlineQueue.ts, queueProcessor.ts, curriculum.ts, types.ts, registerSW.ts
+    pages/               Login, Onboarding, BibleTalkChat, Studies, InviteeProfile, Calendar, Dashboard, Settings, NotFound
+    components/          layout (AppShell, Modal, ConsentBanner, OfflineBanner, ErrorBoundary), calendar (WeeklyCalendar drag+drop), charts (WeeklyHeatmapCanvas), chat, dashboard (AskBotPanel), studies (StudyForm), settings, ui
+    hooks/               auth (useAuth, useUserDoc), queries (useStudies, useInvitees, useBibleTalks, …), mutations (useSaveStudy, useEnablePush, useAiAsk, …), ui (useDragReschedule, …)
+    store/               firebase.ts, api.ts, push.ts, offlineQueue.ts, queueProcessor.ts, registerSW.ts, sse.ts
+    lib/                 curriculum.ts, dates.ts, roles.ts, studies.ts, heatmap/ (aggregate.ts, draw.ts)
+    types/               api.ts, domain.ts, index.ts
     sw.ts                Service worker (Workbox + Web Push handler)
   scripts/generate-icons.mjs   SVG → PNG icon generator (sharp)
   Dockerfile             Multi-stage: Vite build → nginx
@@ -137,11 +139,12 @@ See [`docs/SETUP.md`](docs/SETUP.md) for the one-time GCP setup (creating the cl
 
 /backend                 Node + Express + TS
   src/
-    routes/              ai.ts (Gemini), notify.ts (FCM register + test push)
-    middleware/          verifyFirebaseToken.ts (Bearer auth), requireMinistryLeader
-    services/            gemini.ts, firestoreTools.ts (function-calling tools), scheduler.ts (reminder cron)
+    routes/              ai.ts (Gemini), notify.ts (FCM register + test push), stream.ts (SSE), dev.ts
+    middleware/          verifyFirebaseToken.ts (Bearer auth + role-scope loading)
+    services/            gemini.ts, firestoreTools.ts (function-calling tools), scheduler.ts (reminder cron), sse.ts (SSE hub)
+    lib/                 laDates.ts
     server.ts, firebase.ts, curriculum.ts
-  scripts/seed.ts        Seeds example campuses, bible talks, invitees, studies
+  scripts/               seed.ts (example data), promote.ts (role promotion), resetUsers.ts
   Dockerfile             Multi-stage: tsc build → node:slim
 
 /firestore

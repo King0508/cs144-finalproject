@@ -9,7 +9,7 @@ flowchart LR
   Firestore[("Firestore<br/>campuses, bibleTalks, users,<br/>invitees, studies, messages")]
   FCM["Firebase Cloud Messaging<br/>(Web Push)"]
   Backend["Express on GKE<br/>(Helmet, Zod, rate-limit)<br/>/api/ai, /api/notify"]
-  Gemini["Gemini 2.5 Flash<br/>(generateContent +<br/>function-calling)"]
+  Gemini["Gemini 2.5 Flash-Lite<br/>(generateContent +<br/>function-calling)"]
 
   Browser -- "sign in" --> FBAuth
   Browser -- "Firestore SDK<br/>(reads/writes + onSnapshot)" --> Firestore
@@ -126,7 +126,7 @@ sequenceDiagram
 - **Firestore over Postgres**: real-time chat and calendar are first-class with `onSnapshot`. The free tier comfortably covers the demo. Multi-tenant role scoping is enforceable in declarative security rules, which are unit-testable.
 - **Express over Next.js / Hono**: a thin, dedicated API layer keeps the AI proxy, FCM senders, and reminder scheduler off the client and out of the page-render path. The frontend stays as a pure static SPA, which makes the GKE deployment story two simple Deployments instead of one fragile SSR server.
 - **GKE over Cloud Run**: spec mandates GKE specifically (must show self-healing + manual scaling). Two e2-micro nodes with 2 replicas per Deployment meets the spec minimums and fits comfortably inside the education credit.
-- **Gemini 2.5 Flash function-calling over a vector DB**: the data is small and highly structured. Function-calling lets Gemini ask for exactly what it needs and lets us enforce role-scoped filters before any query runs — safer and simpler than embeddings.
+- **Gemini 2.5 Flash-Lite function-calling over a vector DB**: the data is small and highly structured. Function-calling lets Gemini ask for exactly what it needs and lets us enforce role-scoped filters before any query runs — safer and simpler than embeddings. Flash-Lite is the default (separate free-tier quota bucket); set `GEMINI_MODEL=gemini-2.5-flash` to switch.
 
 ## Failure modes & mitigations
 
