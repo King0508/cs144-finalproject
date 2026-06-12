@@ -1,0 +1,788 @@
+﻿2026-06-12T21:44:56.1619748Z Current runner version: '2.335.1'
+2026-06-12T21:44:56.1657542Z ##[group]Runner Image Provisioner
+2026-06-12T21:44:56.1659779Z Hosted Compute Agent
+2026-06-12T21:44:56.1661096Z Version: 20260527.539
+2026-06-12T21:44:56.1662379Z Commit: a891dd388383b896fa6ac04a82c0b75cec981078
+2026-06-12T21:44:56.1663643Z Build Date: 2026-05-27T21:39:57Z
+2026-06-12T21:44:56.1664716Z Worker ID: {ab98bd31-25f2-4886-9234-95e392780d4a}
+2026-06-12T21:44:56.1666106Z Azure Region: westcentralus
+2026-06-12T21:44:56.1667202Z ##[endgroup]
+2026-06-12T21:44:56.1670050Z ##[group]Operating System
+2026-06-12T21:44:56.1671248Z Ubuntu
+2026-06-12T21:44:56.1672371Z 24.04.4
+2026-06-12T21:44:56.1673207Z LTS
+2026-06-12T21:44:56.1674307Z ##[endgroup]
+2026-06-12T21:44:56.1675174Z ##[group]Runner Image
+2026-06-12T21:44:56.1676484Z Image: ubuntu-24.04
+2026-06-12T21:44:56.1677246Z Version: 20260607.184.1
+2026-06-12T21:44:56.1680060Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260607.184/images/ubuntu/Ubuntu2404-Readme.md
+2026-06-12T21:44:56.1682421Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260607.184
+2026-06-12T21:44:56.1684026Z ##[endgroup]
+2026-06-12T21:44:56.1685947Z ##[group]GITHUB_TOKEN Permissions
+2026-06-12T21:44:56.1689799Z Contents: read
+2026-06-12T21:44:56.1691101Z Metadata: read
+2026-06-12T21:44:56.1691960Z ##[endgroup]
+2026-06-12T21:44:56.1695142Z Secret source: Actions
+2026-06-12T21:44:56.1696379Z Prepare workflow directory
+2026-06-12T21:44:56.2331588Z Prepare all required actions
+2026-06-12T21:44:56.2384556Z Getting action download info
+2026-06-12T21:44:56.5950159Z Download action repository 'actions/checkout@v4' (SHA:34e114876b0b11c390a56381ad16ebd13914f8d5)
+2026-06-12T21:44:56.6652834Z Download action repository 'google-github-actions/auth@v2' (SHA:c200f3691d83b41bf9bbd8638997a462592937ed)
+2026-06-12T21:44:57.2269884Z Download action repository 'google-github-actions/setup-gcloud@v2' (SHA:e427ad8a34f8676edf47cf7d7925499adf3eb74f)
+2026-06-12T21:44:57.7603909Z Download action repository 'google-github-actions/get-gke-credentials@v2' (SHA:64bc7249bbcf78056bb92f14d3cedc2da193946c)
+2026-06-12T21:44:58.4785208Z Complete job name: Build images & deploy to GKE
+2026-06-12T21:44:58.5669123Z ##[group]Run actions/checkout@v4
+2026-06-12T21:44:58.5670699Z with:
+2026-06-12T21:44:58.5671748Z   repository: King0508/cs144-finalproject
+2026-06-12T21:44:58.5681293Z   token: ***
+2026-06-12T21:44:58.5682316Z   ssh-strict: true
+2026-06-12T21:44:58.5683356Z   ssh-user: git
+2026-06-12T21:44:58.5684418Z   persist-credentials: true
+2026-06-12T21:44:58.5685570Z   clean: true
+2026-06-12T21:44:58.5686635Z   sparse-checkout-cone-mode: true
+2026-06-12T21:44:58.5687876Z   fetch-depth: 1
+2026-06-12T21:44:58.5689262Z   fetch-tags: false
+2026-06-12T21:44:58.5690342Z   show-progress: true
+2026-06-12T21:44:58.5691421Z   lfs: false
+2026-06-12T21:44:58.5692415Z   submodules: false
+2026-06-12T21:44:58.5693485Z   set-safe-directory: true
+2026-06-12T21:44:58.5694902Z env:
+2026-06-12T21:44:58.5695957Z   GCP_PROJECT_ID: ***
+2026-06-12T21:44:58.5697096Z   GCP_REGION: ***
+2026-06-12T21:44:58.5698167Z   GKE_CLUSTER: ***
+2026-06-12T21:44:58.5699452Z   GKE_ZONE: ***
+2026-06-12T21:44:58.5700560Z   AR_REPO: ***
+2026-06-12T21:44:58.5701618Z ##[endgroup]
+2026-06-12T21:44:58.6925507Z Syncing repository: King0508/cs144-finalproject
+2026-06-12T21:44:58.6928753Z ##[group]Getting Git version info
+2026-06-12T21:44:58.6930538Z Working directory is '/home/runner/work/cs144-finalproject/cs144-finalproject'
+2026-06-12T21:44:58.6932961Z [command]/usr/bin/git version
+2026-06-12T21:44:58.6973476Z git version 2.54.0
+2026-06-12T21:44:58.6998225Z ##[endgroup]
+2026-06-12T21:44:58.7013375Z Temporarily overriding HOME='/home/runner/work/_temp/e8bda821-05f3-4789-bf60-3771d95a22a6' before making global git config changes
+2026-06-12T21:44:58.7016795Z Adding repository directory to the temporary git global config as a safe directory
+2026-06-12T21:44:58.7026637Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/cs144-finalproject/cs144-finalproject
+2026-06-12T21:44:58.7072344Z Deleting the contents of '/home/runner/work/cs144-finalproject/cs144-finalproject'
+2026-06-12T21:44:58.7075841Z ##[group]Initializing the repository
+2026-06-12T21:44:58.7080285Z [command]/usr/bin/git init /home/runner/work/cs144-finalproject/cs144-finalproject
+2026-06-12T21:44:58.7169240Z hint: Using 'master' as the name for the initial branch. This default branch name
+2026-06-12T21:44:58.7172027Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+2026-06-12T21:44:58.7174835Z hint: to use in all of your new repositories, which will suppress this warning,
+2026-06-12T21:44:58.7177103Z hint: call:
+2026-06-12T21:44:58.7178111Z hint:
+2026-06-12T21:44:58.7179668Z hint: 	git config --global init.defaultBranch <name>
+2026-06-12T21:44:58.7181046Z hint:
+2026-06-12T21:44:58.7182333Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2026-06-12T21:44:58.7184558Z hint: 'development'. The just-created branch can be renamed via this command:
+2026-06-12T21:44:58.7186369Z hint:
+2026-06-12T21:44:58.7187334Z hint: 	git branch -m <name>
+2026-06-12T21:44:58.7188543Z hint:
+2026-06-12T21:44:58.7190010Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2026-06-12T21:44:58.7192545Z Initialized empty Git repository in /home/runner/work/cs144-finalproject/cs144-finalproject/.git/
+2026-06-12T21:44:58.7196387Z [command]/usr/bin/git remote add origin https://github.com/King0508/cs144-finalproject
+2026-06-12T21:44:58.7227979Z ##[endgroup]
+2026-06-12T21:44:58.7229975Z ##[group]Disabling automatic garbage collection
+2026-06-12T21:44:58.7231909Z [command]/usr/bin/git config --local gc.auto 0
+2026-06-12T21:44:58.7262527Z ##[endgroup]
+2026-06-12T21:44:58.7268847Z ##[group]Setting up auth
+2026-06-12T21:44:58.7270482Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-06-12T21:44:58.7303165Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-06-12T21:44:58.7628524Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-06-12T21:44:58.7661809Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-06-12T21:44:58.7892985Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-06-12T21:44:58.7933692Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-06-12T21:44:58.8168009Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-06-12T21:44:58.8203460Z ##[endgroup]
+2026-06-12T21:44:58.8205794Z ##[group]Fetching the repository
+2026-06-12T21:44:58.8212567Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +befdfa30d4f4314ae6072dc1e85bd17123ef70cb:refs/remotes/origin/main
+2026-06-12T21:44:59.5229479Z From https://github.com/King0508/cs144-finalproject
+2026-06-12T21:44:59.5230489Z  * [new ref]         befdfa30d4f4314ae6072dc1e85bd17123ef70cb -> origin/main
+2026-06-12T21:44:59.5264593Z ##[endgroup]
+2026-06-12T21:44:59.5265414Z ##[group]Determining the checkout info
+2026-06-12T21:44:59.5267669Z ##[endgroup]
+2026-06-12T21:44:59.5273258Z [command]/usr/bin/git sparse-checkout disable
+2026-06-12T21:44:59.5316009Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-06-12T21:44:59.5342326Z ##[group]Checking out the ref
+2026-06-12T21:44:59.5346349Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+2026-06-12T21:44:59.5502754Z Switched to a new branch 'main'
+2026-06-12T21:44:59.5505051Z branch 'main' set up to track 'origin/main'.
+2026-06-12T21:44:59.5512286Z ##[endgroup]
+2026-06-12T21:44:59.5554145Z [command]/usr/bin/git log -1 --format=%H
+2026-06-12T21:44:59.5577467Z befdfa30d4f4314ae6072dc1e85bd17123ef70cb
+2026-06-12T21:44:59.5824192Z ##[group]Run google-github-actions/auth@v2
+2026-06-12T21:44:59.5824624Z with:
+2026-06-12T21:44:59.5825457Z   workload_identity_provider: ***
+2026-06-12T21:44:59.5825994Z   service_account: ***
+2026-06-12T21:44:59.5826354Z   create_credentials_file: true
+2026-06-12T21:44:59.5826736Z   export_environment_variables: true
+2026-06-12T21:44:59.5827128Z   universe: googleapis.com
+2026-06-12T21:44:59.5827494Z   cleanup_credentials: true
+2026-06-12T21:44:59.5827862Z   access_token_lifetime: 3600s
+2026-06-12T21:44:59.5828504Z   access_token_scopes: https://www.googleapis.com/auth/cloud-platform
+2026-06-12T21:44:59.5829017Z   id_token_include_email: false
+2026-06-12T21:44:59.5829362Z env:
+2026-06-12T21:44:59.5829706Z   GCP_PROJECT_ID: ***
+2026-06-12T21:44:59.5830057Z   GCP_REGION: ***
+2026-06-12T21:44:59.5830404Z   GKE_CLUSTER: ***
+2026-06-12T21:44:59.5830744Z   GKE_ZONE: ***
+2026-06-12T21:44:59.5831112Z   AR_REPO: ***
+2026-06-12T21:44:59.5831423Z ##[endgroup]
+2026-06-12T21:44:59.8903722Z Created credentials file at "/home/runner/work/cs144-finalproject/cs144-finalproject/gha-creds-e2470f6b4404bb61.json"
+2026-06-12T21:44:59.9996092Z ##[group]Run google-github-actions/setup-gcloud@v2
+2026-06-12T21:44:59.9996518Z with:
+2026-06-12T21:44:59.9996783Z   version: latest
+2026-06-12T21:44:59.9997070Z   skip_install: false
+2026-06-12T21:44:59.9997366Z   skip_tool_cache: false
+2026-06-12T21:44:59.9997652Z env:
+2026-06-12T21:44:59.9998068Z   GCP_PROJECT_ID: ***
+2026-06-12T21:44:59.9998688Z   GCP_REGION: ***
+2026-06-12T21:44:59.9999000Z   GKE_CLUSTER: ***
+2026-06-12T21:44:59.9999304Z   GKE_ZONE: ***
+2026-06-12T21:44:59.9999584Z   AR_REPO: ***
+2026-06-12T21:45:00.0000191Z   CLOUDSDK_AUTH_CREDENTIAL_FILE_OVERRIDE: /home/runner/work/cs144-finalproject/cs144-finalproject/gha-creds-e2470f6b4404bb61.json
+2026-06-12T21:45:00.0001123Z   GOOGLE_APPLICATION_CREDENTIALS: /home/runner/work/cs144-finalproject/cs144-finalproject/gha-creds-e2470f6b4404bb61.json
+2026-06-12T21:45:00.0002027Z   GOOGLE_GHA_CREDS_PATH: /home/runner/work/cs144-finalproject/cs144-finalproject/gha-creds-e2470f6b4404bb61.json
+2026-06-12T21:45:00.0002710Z   CLOUDSDK_CORE_PROJECT: ***
+2026-06-12T21:45:00.0003061Z   CLOUDSDK_PROJECT: ***
+2026-06-12T21:45:00.0003380Z   GCLOUD_PROJECT: ***
+2026-06-12T21:45:00.0003680Z   GCP_PROJECT: ***
+2026-06-12T21:45:00.0004001Z   GOOGLE_CLOUD_PROJECT: ***
+2026-06-12T21:45:00.0004329Z ##[endgroup]
+2026-06-12T21:45:00.9143709Z [command]/usr/bin/tar xz --warning=no-unknown-keyword --overwrite -C /home/runner/work/_temp/71cd9196-ed8e-419d-9340-688672a3da2e -f /home/runner/work/_temp/98a261fa-4b7b-4d3e-89f3-33ff562aece5
+2026-06-12T21:45:18.7676641Z Successfully authenticated
+2026-06-12T21:45:18.7895119Z ##[group]Run gcloud auth configure-docker ***-docker.pkg.dev --quiet
+2026-06-12T21:45:18.7895812Z [36;1mgcloud auth configure-docker ***-docker.pkg.dev --quiet[0m
+2026-06-12T21:45:18.8040324Z shell: /usr/bin/bash -e {0}
+2026-06-12T21:45:18.8040700Z env:
+2026-06-12T21:45:18.8041084Z   GCP_PROJECT_ID: ***
+2026-06-12T21:45:18.8041403Z   GCP_REGION: ***
+2026-06-12T21:45:18.8067014Z   GKE_CLUSTER: ***
+2026-06-12T21:45:18.8067491Z   GKE_ZONE: ***
+2026-06-12T21:45:18.8067884Z   AR_REPO: ***
+2026-06-12T21:45:18.8068979Z   CLOUDSDK_AUTH_CREDENTIAL_FILE_OVERRIDE: /home/runner/work/cs144-finalproject/cs144-finalproject/gha-creds-e2470f6b4404bb61.json
+2026-06-12T21:45:18.8070424Z   GOOGLE_APPLICATION_CREDENTIALS: /home/runner/work/cs144-finalproject/cs144-finalproject/gha-creds-e2470f6b4404bb61.json
+2026-06-12T21:45:18.8071734Z   GOOGLE_GHA_CREDS_PATH: /home/runner/work/cs144-finalproject/cs144-finalproject/gha-creds-e2470f6b4404bb61.json
+2026-06-12T21:45:18.8072786Z   CLOUDSDK_CORE_PROJECT: ***
+2026-06-12T21:45:18.8073324Z   CLOUDSDK_PROJECT: ***
+2026-06-12T21:45:18.8073820Z   GCLOUD_PROJECT: ***
+2026-06-12T21:45:18.8074280Z   GCP_PROJECT: ***
+2026-06-12T21:45:18.8074771Z   GOOGLE_CLOUD_PROJECT: ***
+2026-06-12T21:45:18.8075657Z   CLOUDSDK_METRICS_ENVIRONMENT: github-actions-setup-gcloud
+2026-06-12T21:45:18.8076362Z   CLOUDSDK_METRICS_ENVIRONMENT_VERSION: 2.2.1
+2026-06-12T21:45:18.8076905Z ##[endgroup]
+2026-06-12T21:45:19.2657701Z Adding credentials for: ***-docker.pkg.dev
+2026-06-12T21:45:19.2840383Z Docker configuration file updated.
+2026-06-12T21:45:19.3967230Z ##[group]Run IMG="${GCP_REGION}-docker.pkg.dev/${GCP_PROJECT_ID}/${AR_REPO}/backend:${GITHUB_SHA}"
+2026-06-12T21:45:19.3967987Z [36;1mIMG="${GCP_REGION}-docker.pkg.dev/${GCP_PROJECT_ID}/${AR_REPO}/backend:${GITHUB_SHA}"[0m
+2026-06-12T21:45:19.3968824Z [36;1mdocker build -f backend/Dockerfile -t "$IMG" .[0m
+2026-06-12T21:45:19.3969213Z [36;1mdocker push "$IMG"[0m
+2026-06-12T21:45:19.3969556Z [36;1mecho "BACKEND_IMAGE=$IMG" >> $GITHUB_ENV[0m
+2026-06-12T21:45:19.4003766Z shell: /usr/bin/bash -e {0}
+2026-06-12T21:45:19.4004153Z env:
+2026-06-12T21:45:19.4004536Z   GCP_PROJECT_ID: ***
+2026-06-12T21:45:19.4004850Z   GCP_REGION: ***
+2026-06-12T21:45:19.4005163Z   GKE_CLUSTER: ***
+2026-06-12T21:45:19.4005454Z   GKE_ZONE: ***
+2026-06-12T21:45:19.4005734Z   AR_REPO: ***
+2026-06-12T21:45:19.4006325Z   CLOUDSDK_AUTH_CREDENTIAL_FILE_OVERRIDE: /home/runner/work/cs144-finalproject/cs144-finalproject/gha-creds-e2470f6b4404bb61.json
+2026-06-12T21:45:19.4007268Z   GOOGLE_APPLICATION_CREDENTIALS: /home/runner/work/cs144-finalproject/cs144-finalproject/gha-creds-e2470f6b4404bb61.json
+2026-06-12T21:45:19.4008082Z   GOOGLE_GHA_CREDS_PATH: /home/runner/work/cs144-finalproject/cs144-finalproject/gha-creds-e2470f6b4404bb61.json
+2026-06-12T21:45:19.4008976Z   CLOUDSDK_CORE_PROJECT: ***
+2026-06-12T21:45:19.4009326Z   CLOUDSDK_PROJECT: ***
+2026-06-12T21:45:19.4009661Z   GCLOUD_PROJECT: ***
+2026-06-12T21:45:19.4009973Z   GCP_PROJECT: ***
+2026-06-12T21:45:19.4010275Z   GOOGLE_CLOUD_PROJECT: ***
+2026-06-12T21:45:19.4010642Z   CLOUDSDK_METRICS_ENVIRONMENT: github-actions-setup-gcloud
+2026-06-12T21:45:19.4011075Z   CLOUDSDK_METRICS_ENVIRONMENT_VERSION: 2.2.1
+2026-06-12T21:45:19.4011429Z ##[endgroup]
+2026-06-12T21:45:19.7984144Z #0 building with "default" instance using docker driver
+2026-06-12T21:45:19.7984724Z 
+2026-06-12T21:45:19.7985055Z #1 [internal] load build definition from Dockerfile
+2026-06-12T21:45:19.7985700Z #1 transferring dockerfile: 654B done
+2026-06-12T21:45:19.7986187Z #1 DONE 0.0s
+2026-06-12T21:45:19.7986458Z 
+2026-06-12T21:45:19.7986777Z #2 [internal] load metadata for docker.io/library/node:22-alpine
+2026-06-12T21:45:19.9694913Z #2 ...
+2026-06-12T21:45:19.9695185Z 
+2026-06-12T21:45:19.9695476Z #3 [auth] library/node:pull token for registry-1.docker.io
+2026-06-12T21:45:19.9696011Z #3 DONE 0.0s
+2026-06-12T21:45:20.1197742Z 
+2026-06-12T21:45:20.1198684Z #2 [internal] load metadata for docker.io/library/node:22-alpine
+2026-06-12T21:45:20.4315866Z #2 DONE 0.8s
+2026-06-12T21:45:20.5479433Z 
+2026-06-12T21:45:20.5479938Z #4 [internal] load .dockerignore
+2026-06-12T21:45:20.5480573Z #4 transferring context: 252B done
+2026-06-12T21:45:20.5480967Z #4 DONE 0.0s
+2026-06-12T21:45:20.5481172Z 
+2026-06-12T21:45:20.5481329Z #5 [internal] load build context
+2026-06-12T21:45:20.5481728Z #5 transferring context: 601.50kB 0.0s done
+2026-06-12T21:45:20.5482165Z #5 DONE 0.0s
+2026-06-12T21:45:20.5482337Z 
+2026-06-12T21:45:20.5482810Z #6 [build 1/8] FROM docker.io/library/node:22-alpine@sha256:9385cd9f3001dfc3431e8ead12c43e9e1f87cc1b9b5c6cfd0f73865d405b27c4
+2026-06-12T21:45:20.5483743Z #6 resolve docker.io/library/node:22-alpine@sha256:9385cd9f3001dfc3431e8ead12c43e9e1f87cc1b9b5c6cfd0f73865d405b27c4 done
+2026-06-12T21:45:20.5484657Z #6 sha256:9385cd9f3001dfc3431e8ead12c43e9e1f87cc1b9b5c6cfd0f73865d405b27c4 6.41kB / 6.41kB done
+2026-06-12T21:45:20.5485631Z #6 sha256:8456a1e0e6b9ab7bfd3ce1e82a19cc0b59ca46c0966497f929d01956cc32809b 1.72kB / 1.72kB done
+2026-06-12T21:45:20.5486505Z #6 sha256:c10474645fd344e67b7e99ad0b1ecafd258d04849e0571a8014284da64f69a40 6.52kB / 6.52kB done
+2026-06-12T21:45:20.5487220Z #6 sha256:9b70e313681f44d32991ec943f89228bc91d7431d4a84feafc269a76e3f96a63 0B / 3.87MB 0.1s
+2026-06-12T21:45:20.5488273Z #6 sha256:5b451d10f2bd17da70351ed55ea9a5cf22241907ee50a611d0620f48dce40984 0B / 52.31MB 0.1s
+2026-06-12T21:45:20.5489164Z #6 sha256:33583c35945b3eb669ac3a0ccd4542304cff90a458a82c6b8581f0b46c068f93 0B / 1.26MB 0.1s
+2026-06-12T21:45:20.7049976Z #6 sha256:9b70e313681f44d32991ec943f89228bc91d7431d4a84feafc269a76e3f96a63 1.05MB / 3.87MB 0.2s
+2026-06-12T21:45:20.7051087Z #6 extracting sha256:9b70e313681f44d32991ec943f89228bc91d7431d4a84feafc269a76e3f96a63
+2026-06-12T21:45:20.8476286Z #6 sha256:9b70e313681f44d32991ec943f89228bc91d7431d4a84feafc269a76e3f96a63 3.87MB / 3.87MB 0.3s done
+2026-06-12T21:45:20.8477129Z #6 sha256:5b451d10f2bd17da70351ed55ea9a5cf22241907ee50a611d0620f48dce40984 3.15MB / 52.31MB 0.4s
+2026-06-12T21:45:20.8477845Z #6 sha256:33583c35945b3eb669ac3a0ccd4542304cff90a458a82c6b8581f0b46c068f93 1.26MB / 1.26MB 0.3s done
+2026-06-12T21:45:20.8478771Z #6 extracting sha256:9b70e313681f44d32991ec943f89228bc91d7431d4a84feafc269a76e3f96a63 0.1s done
+2026-06-12T21:45:20.8479458Z #6 sha256:04066241267b482865160bf3b99a4b2b23d0ddd9a36c04c590096fa43d40fed2 446B / 446B 0.3s done
+2026-06-12T21:45:20.9513656Z #6 sha256:5b451d10f2bd17da70351ed55ea9a5cf22241907ee50a611d0620f48dce40984 31.46MB / 52.31MB 0.5s
+2026-06-12T21:45:21.1340774Z #6 sha256:5b451d10f2bd17da70351ed55ea9a5cf22241907ee50a611d0620f48dce40984 52.31MB / 52.31MB 0.6s done
+2026-06-12T21:45:21.1346777Z #6 extracting sha256:5b451d10f2bd17da70351ed55ea9a5cf22241907ee50a611d0620f48dce40984 0.1s
+2026-06-12T21:45:22.2671494Z #6 extracting sha256:5b451d10f2bd17da70351ed55ea9a5cf22241907ee50a611d0620f48dce40984 1.2s done
+2026-06-12T21:45:22.8826188Z #6 extracting sha256:33583c35945b3eb669ac3a0ccd4542304cff90a458a82c6b8581f0b46c068f93
+2026-06-12T21:45:23.1267680Z #6 extracting sha256:33583c35945b3eb669ac3a0ccd4542304cff90a458a82c6b8581f0b46c068f93 0.0s done
+2026-06-12T21:45:23.1269234Z #6 extracting sha256:04066241267b482865160bf3b99a4b2b23d0ddd9a36c04c590096fa43d40fed2 done
+2026-06-12T21:45:23.1269988Z #6 DONE 2.5s
+2026-06-12T21:45:23.1270356Z 
+2026-06-12T21:45:23.1270726Z #7 [build 2/8] WORKDIR /repo
+2026-06-12T21:45:23.1271036Z #7 DONE 0.0s
+2026-06-12T21:45:23.1271178Z 
+2026-06-12T21:45:23.1271305Z #8 [stage-1 2/5] WORKDIR /app
+2026-06-12T21:45:23.1271602Z #8 DONE 0.0s
+2026-06-12T21:45:23.1271748Z 
+2026-06-12T21:45:23.1272004Z #9 [build 3/8] COPY package.json package-lock.json* ./
+2026-06-12T21:45:23.1272388Z #9 DONE 0.0s
+2026-06-12T21:45:23.1272532Z 
+2026-06-12T21:45:23.1272701Z #10 [build 4/8] COPY frontend/package.json ./frontend/
+2026-06-12T21:45:23.1273074Z #10 DONE 0.0s
+2026-06-12T21:45:23.1273221Z 
+2026-06-12T21:45:23.1273383Z #11 [build 5/8] COPY backend/package.json ./backend/
+2026-06-12T21:45:23.1273723Z #11 DONE 0.0s
+2026-06-12T21:45:23.1273860Z 
+2026-06-12T21:45:23.1274202Z #12 [build 6/8] RUN npm ci --workspace=backend --include-workspace-root || npm install --workspace=backend
+2026-06-12T21:45:24.7682317Z #12 1.792 npm warn deprecated whatwg-encoding@3.1.1: Use @exodus/bytes instead for a more spec-conformant and faster implementation
+2026-06-12T21:45:25.1583297Z #12 2.182 npm warn deprecated rimraf@3.0.2: Rimraf versions prior to v4 are no longer supported
+2026-06-12T21:45:25.4664580Z #12 2.490 npm warn deprecated inflight@1.0.6: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
+2026-06-12T21:45:25.6085291Z #12 2.632 npm warn deprecated glob@7.2.3: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
+2026-06-12T21:45:26.3033191Z #12 3.327 npm warn deprecated node-domexception@1.0.0: Use your platform's native DOMException instead
+2026-06-12T21:45:26.4647601Z #12 3.488 npm warn deprecated @humanwhocodes/config-array@0.13.0: Use @eslint/config-array instead
+2026-06-12T21:45:26.6384404Z #12 3.511 npm warn deprecated @humanwhocodes/object-schema@2.0.3: Use @eslint/object-schema instead
+2026-06-12T21:45:28.2141338Z #12 5.236 npm warn deprecated glob@10.5.0: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
+2026-06-12T21:45:29.6829482Z #12 6.706 npm warn deprecated eslint@8.57.1: This version is no longer supported. Please see https://eslint.org/version-support for other options.
+2026-06-12T21:45:32.0627842Z #12 9.086 
+2026-06-12T21:45:32.0628676Z #12 9.086 added 561 packages, and audited 563 packages in 9s
+2026-06-12T21:45:32.0629277Z #12 9.086 
+2026-06-12T21:45:32.0629716Z #12 9.086 115 packages are looking for funding
+2026-06-12T21:45:32.0630291Z #12 9.086   run `npm fund` for details
+2026-06-12T21:45:32.2302931Z #12 9.102 
+2026-06-12T21:45:32.2303532Z #12 9.102 5 high severity vulnerabilities
+2026-06-12T21:45:32.2304321Z #12 9.102 
+2026-06-12T21:45:32.2304891Z #12 9.102 To address all issues (including breaking changes), run:
+2026-06-12T21:45:32.2305583Z #12 9.102   npm audit fix --force
+2026-06-12T21:45:32.2306093Z #12 9.102 
+2026-06-12T21:45:32.2306578Z #12 9.102 Run `npm audit` for details.
+2026-06-12T21:45:32.2307181Z #12 9.103 npm notice
+2026-06-12T21:45:32.2307870Z #12 9.103 npm notice New major version of npm available! 10.9.8 -> 11.17.0
+2026-06-12T21:45:32.2315578Z #12 9.103 npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.17.0
+2026-06-12T21:45:32.2316289Z #12 9.103 npm notice To update run: npm install -g npm@11.17.0
+2026-06-12T21:45:32.2316817Z #12 9.103 npm notice
+2026-06-12T21:45:32.9037667Z #12 DONE 9.9s
+2026-06-12T21:45:33.0690257Z 
+2026-06-12T21:45:33.0690899Z #13 [build 7/8] COPY backend ./backend
+2026-06-12T21:45:33.0691474Z #13 DONE 0.0s
+2026-06-12T21:45:33.0691708Z 
+2026-06-12T21:45:33.0692164Z #14 [build 8/8] RUN npm -w backend run build && npm -w backend prune --production
+2026-06-12T21:45:33.1849047Z #14 0.266 
+2026-06-12T21:45:33.1849533Z #14 0.266 > backend@0.1.0 build
+2026-06-12T21:45:33.1850063Z #14 0.266 > tsc -p tsconfig.json
+2026-06-12T21:45:33.1850527Z #14 0.266 
+2026-06-12T21:45:36.3771353Z #14 3.459 npm warn config production Use `--omit=dev` instead.
+2026-06-12T21:45:38.2571778Z #14 5.339 
+2026-06-12T21:45:38.2572194Z #14 5.339 up to date, audited 330 packages in 2s
+2026-06-12T21:45:38.2572609Z #14 5.339 
+2026-06-12T21:45:38.2572909Z #14 5.339 56 packages are looking for funding
+2026-06-12T21:45:38.4436449Z #14 5.339   run `npm fund` for details
+2026-06-12T21:45:38.4436950Z #14 5.340 
+2026-06-12T21:45:38.4437287Z #14 5.340 found 0 vulnerabilities
+2026-06-12T21:45:38.4437694Z #14 DONE 5.4s
+2026-06-12T21:45:39.5484773Z 
+2026-06-12T21:45:39.5485569Z #15 [stage-1 3/5] COPY --from=build /repo/backend/dist ./dist
+2026-06-12T21:45:39.7292113Z #15 DONE 0.0s
+2026-06-12T21:45:39.7292432Z 
+2026-06-12T21:45:39.7292843Z #16 [stage-1 4/5] COPY --from=build /repo/backend/package.json ./package.json
+2026-06-12T21:45:39.7293583Z #16 DONE 0.0s
+2026-06-12T21:45:39.7293810Z 
+2026-06-12T21:45:39.7294113Z #17 [stage-1 5/5] COPY --from=build /repo/node_modules ./node_modules
+2026-06-12T21:45:42.0621501Z #17 DONE 2.5s
+2026-06-12T21:45:42.2137660Z 
+2026-06-12T21:45:42.2138785Z #18 exporting to image
+2026-06-12T21:45:42.2139373Z #18 exporting layers
+2026-06-12T21:45:44.5767284Z #18 exporting layers 2.5s done
+2026-06-12T21:45:44.5929067Z #18 writing image sha256:bc1185e0da5738dece9fa7170bfc1b921ff30b54e1fcd166da0128389be59cca done
+2026-06-12T21:45:44.5931218Z #18 naming to ***-docker.pkg.dev/***/***/backend:befdfa30d4f4314ae6072dc1e85bd17123ef70cb done
+2026-06-12T21:45:44.5932091Z #18 DONE 2.5s
+2026-06-12T21:45:45.4906889Z The push refers to repository [***-docker.pkg.dev/***/***/backend]
+2026-06-12T21:45:45.8256234Z fe8f397c5447: Preparing
+2026-06-12T21:45:45.8256772Z 4522e37faa5d: Preparing
+2026-06-12T21:45:45.8257283Z cb69c2ea6a5c: Preparing
+2026-06-12T21:45:45.8257773Z 6a285c7b5676: Preparing
+2026-06-12T21:45:45.8262086Z 8d206bc39137: Preparing
+2026-06-12T21:45:45.8262871Z 8ac280f5eaa5: Preparing
+2026-06-12T21:45:45.8263548Z c177364502ef: Preparing
+2026-06-12T21:45:45.8263885Z bc5a3fe779ad: Preparing
+2026-06-12T21:45:45.8270041Z 8ac280f5eaa5: Waiting
+2026-06-12T21:45:45.8270430Z c177364502ef: Waiting
+2026-06-12T21:45:45.8271111Z bc5a3fe779ad: Waiting
+2026-06-12T21:45:46.3988009Z 8d206bc39137: Layer already exists
+2026-06-12T21:45:46.7525814Z 8ac280f5eaa5: Layer already exists
+2026-06-12T21:45:47.1262837Z c177364502ef: Layer already exists
+2026-06-12T21:45:47.4942469Z bc5a3fe779ad: Layer already exists
+2026-06-12T21:45:47.6851125Z 6a285c7b5676: Pushed
+2026-06-12T21:45:47.8653351Z cb69c2ea6a5c: Pushed
+2026-06-12T21:45:47.8944169Z 4522e37faa5d: Pushed
+2026-06-12T21:45:55.0454186Z fe8f397c5447: Pushed
+2026-06-12T21:45:56.5614659Z befdfa30d4f4314ae6072dc1e85bd17123ef70cb: digest: sha256:0d4fd880c7c8852ea34b91d4120d70940b8c1ac54b91db8a341c0ef690e70eda size: 1992
+2026-06-12T21:45:56.5679878Z ##[group]Run IMG="${GCP_REGION}-docker.pkg.dev/${GCP_PROJECT_ID}/${AR_REPO}/frontend:${GITHUB_SHA}"
+2026-06-12T21:45:56.5680650Z [36;1mIMG="${GCP_REGION}-docker.pkg.dev/${GCP_PROJECT_ID}/${AR_REPO}/frontend:${GITHUB_SHA}"[0m
+2026-06-12T21:45:56.5681211Z [36;1mdocker build -f frontend/Dockerfile \[0m
+2026-06-12T21:45:56.5681699Z [36;1m  --build-arg VITE_FIREBASE_API_KEY="$VITE_FIREBASE_API_KEY" \[0m
+2026-06-12T21:45:56.5682260Z [36;1m  --build-arg VITE_FIREBASE_AUTH_DOMAIN="$VITE_FIREBASE_AUTH_DOMAIN" \[0m
+2026-06-12T21:45:56.5682831Z [36;1m  --build-arg VITE_FIREBASE_PROJECT_ID="$VITE_FIREBASE_PROJECT_ID" \[0m
+2026-06-12T21:45:56.5683414Z [36;1m  --build-arg VITE_FIREBASE_STORAGE_BUCKET="$VITE_FIREBASE_STORAGE_BUCKET" \[0m
+2026-06-12T21:45:56.5684054Z [36;1m  --build-arg VITE_FIREBASE_MESSAGING_SENDER_ID="$VITE_FIREBASE_MESSAGING_SENDER_ID" \[0m
+2026-06-12T21:45:56.5684655Z [36;1m  --build-arg VITE_FIREBASE_APP_ID="$VITE_FIREBASE_APP_ID" \[0m
+2026-06-12T21:45:56.5685239Z [36;1m  --build-arg VITE_FIREBASE_VAPID_KEY="$VITE_FIREBASE_VAPID_KEY" \[0m
+2026-06-12T21:45:56.5685704Z [36;1m  -t "$IMG" .[0m
+2026-06-12T21:45:56.5686029Z [36;1mdocker push "$IMG"[0m
+2026-06-12T21:45:56.5686414Z [36;1mecho "FRONTEND_IMAGE=$IMG" >> $GITHUB_ENV[0m
+2026-06-12T21:45:56.5723526Z shell: /usr/bin/bash -e {0}
+2026-06-12T21:45:56.5723859Z env:
+2026-06-12T21:45:56.5724280Z   GCP_PROJECT_ID: ***
+2026-06-12T21:45:56.5724610Z   GCP_REGION: ***
+2026-06-12T21:45:56.5724933Z   GKE_CLUSTER: ***
+2026-06-12T21:45:56.5725241Z   GKE_ZONE: ***
+2026-06-12T21:45:56.5725563Z   AR_REPO: ***
+2026-06-12T21:45:56.5726179Z   CLOUDSDK_AUTH_CREDENTIAL_FILE_OVERRIDE: /home/runner/work/cs144-finalproject/cs144-finalproject/gha-creds-e2470f6b4404bb61.json
+2026-06-12T21:45:56.5727098Z   GOOGLE_APPLICATION_CREDENTIALS: /home/runner/work/cs144-finalproject/cs144-finalproject/gha-creds-e2470f6b4404bb61.json
+2026-06-12T21:45:56.5727939Z   GOOGLE_GHA_CREDS_PATH: /home/runner/work/cs144-finalproject/cs144-finalproject/gha-creds-e2470f6b4404bb61.json
+2026-06-12T21:45:56.5728770Z   CLOUDSDK_CORE_PROJECT: ***
+2026-06-12T21:45:56.5729122Z   CLOUDSDK_PROJECT: ***
+2026-06-12T21:45:56.5729447Z   GCLOUD_PROJECT: ***
+2026-06-12T21:45:56.5729746Z   GCP_PROJECT: ***
+2026-06-12T21:45:56.5730042Z   GOOGLE_CLOUD_PROJECT: ***
+2026-06-12T21:45:56.5730411Z   CLOUDSDK_METRICS_ENVIRONMENT: github-actions-setup-gcloud
+2026-06-12T21:45:56.5730868Z   CLOUDSDK_METRICS_ENVIRONMENT_VERSION: 2.2.1
+2026-06-12T21:45:56.5731567Z   BACKEND_IMAGE: ***-docker.pkg.dev/***/***/backend:befdfa30d4f4314ae6072dc1e85bd17123ef70cb
+2026-06-12T21:45:56.5732172Z   VITE_FIREBASE_API_KEY: ***
+2026-06-12T21:45:56.5732596Z   VITE_FIREBASE_AUTH_DOMAIN: ***
+2026-06-12T21:45:56.5732976Z   VITE_FIREBASE_PROJECT_ID: ***
+2026-06-12T21:45:56.5733452Z   VITE_FIREBASE_STORAGE_BUCKET: ***
+2026-06-12T21:45:56.5733835Z   VITE_FIREBASE_MESSAGING_SENDER_ID: ***
+2026-06-12T21:45:56.5734259Z   VITE_FIREBASE_APP_ID: ***
+2026-06-12T21:45:56.5734884Z   VITE_FIREBASE_VAPID_KEY: ***
+
+2026-06-12T21:45:56.5735212Z ##[endgroup]
+2026-06-12T21:45:56.8353188Z #0 building with "default" instance using docker driver
+2026-06-12T21:45:56.8353877Z 
+2026-06-12T21:45:56.8354289Z #1 [internal] load build definition from Dockerfile
+2026-06-12T21:45:56.8354887Z #1 transferring dockerfile: 1.58kB done
+2026-06-12T21:45:56.8355331Z #1 DONE 0.0s
+2026-06-12T21:45:56.8355477Z 
+2026-06-12T21:45:56.8355733Z #2 [auth] library/nginx:pull token for registry-1.docker.io
+2026-06-12T21:45:57.0402846Z #2 DONE 0.0s
+2026-06-12T21:45:57.0403127Z 
+2026-06-12T21:45:57.0403472Z #3 [internal] load metadata for docker.io/library/node:22-alpine
+2026-06-12T21:45:57.0404007Z #3 DONE 0.2s
+2026-06-12T21:45:57.0404197Z 
+2026-06-12T21:45:57.0404457Z #4 [internal] load metadata for docker.io/library/nginx:1.27-alpine
+2026-06-12T21:45:57.4059443Z #4 DONE 0.7s
+2026-06-12T21:45:57.5201674Z 
+2026-06-12T21:45:57.5202314Z #5 [internal] load .dockerignore
+2026-06-12T21:45:57.5202850Z #5 transferring context: 252B done
+2026-06-12T21:45:57.5203848Z #5 DONE 0.0s
+2026-06-12T21:45:57.5204037Z 
+2026-06-12T21:45:57.5204496Z #6 [build 1/9] FROM docker.io/library/node:22-alpine@sha256:9385cd9f3001dfc3431e8ead12c43e9e1f87cc1b9b5c6cfd0f73865d405b27c4
+2026-06-12T21:45:57.5205107Z #6 DONE 0.0s
+2026-06-12T21:45:57.5205247Z 
+2026-06-12T21:45:57.5205376Z #7 [internal] load build context
+2026-06-12T21:45:57.5205952Z #7 transferring context: 547.97kB 0.0s done
+2026-06-12T21:45:57.5206285Z #7 DONE 0.0s
+2026-06-12T21:45:57.5206430Z 
+2026-06-12T21:45:57.5206558Z #8 [build 2/9] WORKDIR /repo
+2026-06-12T21:45:57.5206847Z #8 CACHED
+2026-06-12T21:45:57.5206984Z 
+2026-06-12T21:45:57.5207161Z #9 [build 3/9] COPY package.json package-lock.json* ./
+2026-06-12T21:45:57.5207518Z #9 CACHED
+2026-06-12T21:45:57.5207650Z 
+2026-06-12T21:45:57.5207821Z #10 [build 4/9] COPY frontend/package.json ./frontend/
+2026-06-12T21:45:57.5208166Z #10 CACHED
+2026-06-12T21:45:57.5208300Z 
+2026-06-12T21:45:57.5208641Z #11 [build 5/9] COPY backend/package.json ./backend/
+2026-06-12T21:45:57.5208990Z #11 CACHED
+2026-06-12T21:45:57.5209125Z 
+2026-06-12T21:45:57.5209542Z #12 [stage-1 1/3] FROM docker.io/library/nginx:1.27-alpine@sha256:65645c7bb6a0661892a8b03b89d0743208a18dd2f3f17a54ef4b76fb8e2f2a10
+2026-06-12T21:45:57.5210403Z #12 resolve docker.io/library/nginx:1.27-alpine@sha256:65645c7bb6a0661892a8b03b89d0743208a18dd2f3f17a54ef4b76fb8e2f2a10 done
+2026-06-12T21:45:57.5211178Z #12 sha256:6769dc3a703c719c1d2756bda113659be28ae16cf0da58dd5fd823d6b9a050ea 10.79kB / 10.79kB done
+2026-06-12T21:45:57.5211846Z #12 sha256:f18232174bc91741fdf3da96d85011092101a032a93a388b79e99e69c2d5c870 0B / 3.64MB 0.1s
+2026-06-12T21:45:57.5212470Z #12 sha256:61ca4f733c802afd9e05a32f0de0361b6d713b8b53292dc15fb093229f648674 0B / 1.79MB 0.1s
+2026-06-12T21:45:57.5213125Z #12 sha256:65645c7bb6a0661892a8b03b89d0743208a18dd2f3f17a54ef4b76fb8e2f2a10 10.33kB / 10.33kB done
+2026-06-12T21:45:57.5213791Z #12 sha256:62223d644fa234c3a1cc785ee14242ec47a77364226f1c811d2f669f96dc2ac8 2.50kB / 2.50kB done
+2026-06-12T21:45:57.5214838Z #12 sha256:b464cfdf2a6319875aeb27359ec549790ce14d8214fcb16ef915e4530e5ed235 0B / 629B 0.1s
+2026-06-12T21:45:57.6209440Z #12 sha256:f18232174bc91741fdf3da96d85011092101a032a93a388b79e99e69c2d5c870 1.05MB / 3.64MB 0.2s
+2026-06-12T21:45:57.7667090Z #12 sha256:f18232174bc91741fdf3da96d85011092101a032a93a388b79e99e69c2d5c870 3.64MB / 3.64MB 0.2s done
+2026-06-12T21:45:57.7668086Z #12 sha256:61ca4f733c802afd9e05a32f0de0361b6d713b8b53292dc15fb093229f648674 1.79MB / 1.79MB 0.3s
+2026-06-12T21:45:57.7669286Z #12 sha256:b464cfdf2a6319875aeb27359ec549790ce14d8214fcb16ef915e4530e5ed235 629B / 629B 0.2s done
+2026-06-12T21:45:57.7670380Z #12 extracting sha256:f18232174bc91741fdf3da96d85011092101a032a93a388b79e99e69c2d5c870 0.1s
+2026-06-12T21:45:57.7671504Z #12 sha256:81bd8ed7ec6789b0cb7f1b47ee731c522f6dba83201ec73cd6bca1350f582948 0B / 402B 0.3s
+2026-06-12T21:45:57.7673829Z #12 sha256:d7e5070240863957ebb0b5a44a5729963c3462666baa2947d00628cb5f2d5773 0B / 955B 0.3s
+2026-06-12T21:45:57.9201217Z #12 sha256:61ca4f733c802afd9e05a32f0de0361b6d713b8b53292dc15fb093229f648674 1.79MB / 1.79MB 0.3s done
+2026-06-12T21:45:57.9202841Z #12 extracting sha256:f18232174bc91741fdf3da96d85011092101a032a93a388b79e99e69c2d5c870 0.1s done
+2026-06-12T21:45:57.9203998Z #12 sha256:81bd8ed7ec6789b0cb7f1b47ee731c522f6dba83201ec73cd6bca1350f582948 402B / 402B 0.3s done
+2026-06-12T21:45:57.9204772Z #12 sha256:d7e5070240863957ebb0b5a44a5729963c3462666baa2947d00628cb5f2d5773 955B / 955B 0.3s done
+2026-06-12T21:45:57.9205448Z #12 extracting sha256:61ca4f733c802afd9e05a32f0de0361b6d713b8b53292dc15fb093229f648674 0.1s done
+2026-06-12T21:45:57.9206161Z #12 sha256:34a64644b756511a2e217f0508e11d1a572085d66cd6dc9a555a082ad49a3102 1.40kB / 1.40kB 0.4s done
+2026-06-12T21:45:57.9206875Z #12 sha256:39c2ddfd6010082a4a646e7ca44e95aca9bf3eaebc00f17f7ccc2954004f2a7d 0B / 15.52MB 0.5s
+2026-06-12T21:45:57.9207572Z #12 sha256:197eb75867ef4fcecd4724f17b0972ab0489436860a594a9445f8eaff8155053 1.21kB / 1.21kB 0.4s done
+2026-06-12T21:45:58.0213438Z #12 sha256:39c2ddfd6010082a4a646e7ca44e95aca9bf3eaebc00f17f7ccc2954004f2a7d 3.15MB / 15.52MB 0.6s
+2026-06-12T21:45:58.0214842Z #12 extracting sha256:b464cfdf2a6319875aeb27359ec549790ce14d8214fcb16ef915e4530e5ed235 done
+2026-06-12T21:45:58.0215839Z #12 extracting sha256:d7e5070240863957ebb0b5a44a5729963c3462666baa2947d00628cb5f2d5773
+2026-06-12T21:45:58.1951115Z #12 sha256:39c2ddfd6010082a4a646e7ca44e95aca9bf3eaebc00f17f7ccc2954004f2a7d 15.52MB / 15.52MB 0.7s done
+2026-06-12T21:45:58.1953719Z #12 extracting sha256:d7e5070240863957ebb0b5a44a5729963c3462666baa2947d00628cb5f2d5773 done
+2026-06-12T21:45:58.1955521Z #12 extracting sha256:81bd8ed7ec6789b0cb7f1b47ee731c522f6dba83201ec73cd6bca1350f582948 done
+2026-06-12T21:45:58.1957370Z #12 extracting sha256:197eb75867ef4fcecd4724f17b0972ab0489436860a594a9445f8eaff8155053 done
+2026-06-12T21:45:58.1958742Z #12 extracting sha256:34a64644b756511a2e217f0508e11d1a572085d66cd6dc9a555a082ad49a3102 done
+2026-06-12T21:45:58.1960498Z #12 extracting sha256:39c2ddfd6010082a4a646e7ca44e95aca9bf3eaebc00f17f7ccc2954004f2a7d 0.1s
+2026-06-12T21:45:58.5539756Z #12 extracting sha256:39c2ddfd6010082a4a646e7ca44e95aca9bf3eaebc00f17f7ccc2954004f2a7d 0.5s done
+2026-06-12T21:45:58.6628906Z #12 DONE 1.2s
+2026-06-12T21:45:58.6629776Z 
+2026-06-12T21:45:58.6630790Z #13 [build 6/9] RUN npm ci --workspace=frontend --include-workspace-root || npm install --workspace=frontend
+2026-06-12T21:45:59.8194818Z #13 2.377 npm warn deprecated whatwg-encoding@3.1.1: Use @exodus/bytes instead for a more spec-conformant and faster implementation
+2026-06-12T21:46:00.3542703Z #13 2.912 npm warn deprecated rimraf@3.0.2: Rimraf versions prior to v4 are no longer supported
+2026-06-12T21:46:00.7833647Z #13 3.339 npm warn deprecated source-map@0.8.0-beta.0: The work that was done in this beta branch won't be included in future versions
+2026-06-12T21:46:00.9393539Z #13 3.497 npm warn deprecated inflight@1.0.6: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
+2026-06-12T21:46:01.1448028Z #13 3.551 npm warn deprecated glob@7.2.3: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
+2026-06-12T21:46:01.8758684Z #13 4.433 npm warn deprecated @humanwhocodes/config-array@0.13.0: Use @eslint/config-array instead
+2026-06-12T21:46:02.0539899Z #13 4.460 npm warn deprecated @humanwhocodes/object-schema@2.0.3: Use @eslint/object-schema instead
+2026-06-12T21:46:03.9820578Z #13 6.539 npm warn deprecated glob@11.1.0: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
+2026-06-12T21:46:05.5151035Z #13 8.072 npm warn deprecated eslint@8.57.1: This version is no longer supported. Please see https://eslint.org/version-support for other options.
+2026-06-12T21:46:08.6500079Z #13 11.21 
+2026-06-12T21:46:08.6500536Z #13 11.21 added 720 packages, and audited 722 packages in 11s
+2026-06-12T21:46:08.6500948Z #13 11.21 
+2026-06-12T21:46:08.6501235Z #13 11.21 172 packages are looking for funding
+2026-06-12T21:46:08.6501601Z #13 11.21   run `npm fund` for details
+2026-06-12T21:46:08.8177679Z #13 11.22 
+2026-06-12T21:46:08.8178504Z #13 11.22 5 high severity vulnerabilities
+2026-06-12T21:46:08.8179309Z #13 11.22 
+2026-06-12T21:46:08.8179866Z #13 11.22 To address all issues (including breaking changes), run:
+2026-06-12T21:46:08.8180496Z #13 11.22   npm audit fix --force
+2026-06-12T21:46:08.8180947Z #13 11.22 
+2026-06-12T21:46:08.8181314Z #13 11.22 Run `npm audit` for details.
+2026-06-12T21:46:08.8181777Z #13 11.22 npm notice
+2026-06-12T21:46:08.8182319Z #13 11.22 npm notice New major version of npm available! 10.9.8 -> 11.17.0
+2026-06-12T21:46:08.8183559Z #13 11.22 npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.17.0
+2026-06-12T21:46:08.8184351Z #13 11.22 npm notice To update run: npm install -g npm@11.17.0
+2026-06-12T21:46:08.8184899Z #13 11.22 npm notice
+2026-06-12T21:46:09.8044133Z #13 DONE 12.4s
+2026-06-12T21:46:09.9902903Z 
+2026-06-12T21:46:09.9903731Z #14 [build 7/9] COPY frontend ./frontend
+2026-06-12T21:46:09.9904502Z #14 DONE 0.0s
+2026-06-12T21:46:09.9904949Z 
+2026-06-12T21:46:09.9905550Z #15 [build 8/9] RUN npm -w frontend run icons || echo "[warn] icon generation skipped"
+2026-06-12T21:46:10.1074217Z #15 0.268 
+2026-06-12T21:46:10.1074720Z #15 0.268 > frontend@0.1.0 icons
+2026-06-12T21:46:10.1075283Z #15 0.268 > node scripts/generate-icons.mjs
+2026-06-12T21:46:10.1075666Z #15 0.268 
+2026-06-12T21:46:10.2299111Z #15 0.390 Wrote icons/icon-192.png
+2026-06-12T21:46:10.3336897Z #15 0.426 Wrote icons/icon-512.png
+2026-06-12T21:46:10.3337724Z #15 0.474 Wrote icons/icon-512-maskable.png
+2026-06-12T21:46:10.3338616Z #15 0.494 Wrote icons/apple-touch-icon.png
+2026-06-12T21:46:10.5259798Z #15 0.511 Wrote favicon.png
+2026-06-12T21:46:10.5260583Z #15 DONE 0.5s
+2026-06-12T21:46:10.5260879Z 
+2026-06-12T21:46:10.5261470Z #16 [build 9/9] RUN npm -w frontend run build
+2026-06-12T21:46:10.6792226Z #16 0.304 
+2026-06-12T21:46:10.6792710Z #16 0.304 > frontend@0.1.0 build
+2026-06-12T21:46:10.6793282Z #16 0.304 > tsc -b && vite build
+2026-06-12T21:46:10.6793797Z #16 0.304 
+2026-06-12T21:46:15.9330751Z #16 5.558 vite v7.3.5 building client environment for production...
+2026-06-12T21:46:16.3483924Z #16 5.973 transforming...
+2026-06-12T21:46:20.0609511Z #16 9.686 ✓ 1864 modules transformed.
+2026-06-12T21:46:20.3279256Z #16 9.951 rendering chunks...
+2026-06-12T21:46:21.0916715Z #16 10.72 computing gzip size...
+2026-06-12T21:46:21.2894532Z #16 10.76 dist/manifest.webmanifest                          0.54 kB
+2026-06-12T21:46:21.2895844Z #16 10.76 dist/index.html                                    1.30 kB │ gzip:   0.63 kB
+2026-06-12T21:46:21.2896921Z #16 10.76 dist/assets/index-B7prjfc_.css                    28.41 kB │ gzip:   5.90 kB
+2026-06-12T21:46:21.2898079Z #16 10.76 dist/assets/check-Do-yDRJo.js                      0.16 kB │ gzip:   0.17 kB │ map:     0.78 kB
+2026-06-12T21:46:21.2899580Z #16 10.76 dist/assets/curriculum-CB7ikhre.js                 0.32 kB │ gzip:   0.26 kB │ map:     1.69 kB
+2026-06-12T21:46:21.2900769Z #16 10.76 dist/assets/Badge-CkpmsOXT.js                      0.48 kB │ gzip:   0.35 kB │ map:     1.26 kB
+2026-06-12T21:46:21.2901953Z #16 10.76 dist/assets/useCampuses-jnw8I5Q9.js                0.53 kB │ gzip:   0.39 kB │ map:     2.60 kB
+2026-06-12T21:46:21.2905638Z #16 10.76 dist/assets/sparkles-zzHywrkc.js                   0.54 kB │ gzip:   0.32 kB │ map:     1.42 kB
+2026-06-12T21:46:21.2906850Z #16 10.76 dist/assets/PageHeader-DSU_B9aG.js                 0.63 kB │ gzip:   0.36 kB │ map:     1.73 kB
+2026-06-12T21:46:21.2907989Z #16 10.76 dist/assets/useStudies-CZSn9_9F.js                 0.71 kB │ gzip:   0.43 kB │ map:     3.35 kB
+2026-06-12T21:46:21.2909307Z #16 10.76 dist/assets/api-CnIOkGvu.js                        0.96 kB │ gzip:   0.53 kB │ map:     3.84 kB
+2026-06-12T21:46:21.2910903Z #16 10.76 dist/assets/NotFound-MzFYBLfV.js                   0.99 kB │ gzip:   0.59 kB │ map:     2.73 kB
+2026-06-12T21:46:21.2912022Z #16 10.76 dist/assets/dates-BJylU5yQ.js                      1.10 kB │ gzip:   0.63 kB │ map:     4.96 kB
+2026-06-12T21:46:21.2913144Z #16 10.76 dist/assets/Login-midZxkvw.js                      1.65 kB │ gzip:   0.96 kB │ map:     4.29 kB
+2026-06-12T21:46:21.2914218Z #16 10.76 dist/assets/Field-BoTzl1Ju.js                      2.43 kB │ gzip:   0.84 kB │ map:     6.11 kB
+2026-06-12T21:46:21.2915343Z #16 10.76 dist/assets/Onboarding-hZnANk_Y.js                 4.16 kB │ gzip:   1.92 kB │ map:    13.98 kB
+2026-06-12T21:46:21.2916506Z #16 10.76 dist/assets/BibleTalkChat-J_lrYUNB.js              5.58 kB │ gzip:   2.53 kB │ map:    18.99 kB
+2026-06-12T21:46:21.2918299Z #16 10.76 dist/assets/workbox-window.prod.es5-BBnX5xw4.js    5.81 kB │ gzip:   2.40 kB │ map:    13.53 kB
+2026-06-12T21:46:21.2919894Z #16 10.76 dist/assets/InviteeProfile-CGJrdDPl.js             5.97 kB │ gzip:   2.38 kB │ map:    19.50 kB
+2026-06-12T21:46:21.2921070Z #16 10.76 dist/assets/Modal-C9LFQoci.js                      6.54 kB │ gzip:   2.70 kB │ map:    22.93 kB
+2026-06-12T21:46:21.2922209Z #16 10.76 dist/assets/Calendar-MWqEfjkS.js                   9.76 kB │ gzip:   3.88 kB │ map:    34.99 kB
+2026-06-12T21:46:21.2923375Z #16 10.76 dist/assets/Studies-DInNX_rB.js                    9.95 kB │ gzip:   3.88 kB │ map:    34.95 kB
+2026-06-12T21:46:21.2924505Z #16 10.76 dist/assets/Dashboard-AJf_gecZ.js                 16.26 kB │ gzip:   5.94 kB │ map:    53.25 kB
+2026-06-12T21:46:21.2925682Z #16 10.76 dist/assets/Settings-Bdb5VJfe.js                  24.09 kB │ gzip:   7.97 kB │ map:   135.26 kB
+2026-06-12T21:46:21.2926785Z #16 10.76 dist/assets/index-CH3gVtnq.js                    620.12 kB │ gzip: 194.83 kB │ map: 3,121.43 kB
+2026-06-12T21:46:21.2927444Z #16 10.76 
+2026-06-12T21:46:21.2927998Z #16 10.76 (!) Some chunks are larger than 500 kB after minification. Consider:
+2026-06-12T21:46:21.2929023Z #16 10.76 - Using dynamic import() to code-split the application
+2026-06-12T21:46:21.2930253Z #16 10.76 - Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+2026-06-12T21:46:21.2931540Z #16 10.76 - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+2026-06-12T21:46:21.2932361Z #16 10.76 ✓ built in 5.17s
+2026-06-12T21:46:21.6904038Z #16 11.32 
+2026-06-12T21:46:21.6904806Z #16 11.32 PWA v1.3.0
+2026-06-12T21:46:21.6905715Z #16 11.32 Building src/sw.ts service worker ("es" format)...
+2026-06-12T21:46:21.8502202Z #16 11.32 vite v7.3.5 building client environment for production...
+2026-06-12T21:46:21.8525183Z #16 11.32 transforming...
+2026-06-12T21:46:21.9207710Z #16 11.55 ✓ 77 modules transformed.
+2026-06-12T21:46:22.0654501Z #16 11.58 rendering chunks...
+2026-06-12T21:46:22.0655037Z #16 11.60 computing gzip size...
+2026-06-12T21:46:22.0655839Z #16 11.60 dist/sw.mjs  25.65 kB │ gzip: 8.41 kB │ map: 213.51 kB
+2026-06-12T21:46:22.0656366Z #16 11.60 ✓ built in 280ms
+2026-06-12T21:46:22.0656696Z #16 11.69 
+2026-06-12T21:46:22.0656978Z #16 11.69 PWA v1.3.0
+2026-06-12T21:46:22.0657291Z #16 11.69 mode      injectManifest
+2026-06-12T21:46:22.0657606Z #16 11.69 format:   es
+2026-06-12T21:46:22.0657909Z #16 11.69 precache  34 entries (1042.32 KiB)
+2026-06-12T21:46:22.0658258Z #16 11.69 files generated
+2026-06-12T21:46:22.0658823Z #16 11.69   dist/sw.js
+2026-06-12T21:46:22.0659219Z #16 11.69   dist/sw.js.map
+2026-06-12T21:46:22.3390477Z #16 DONE 12.0s
+2026-06-12T21:46:22.5343177Z 
+2026-06-12T21:46:22.5344004Z #17 [stage-1 2/3] COPY --from=build /repo/frontend/dist /usr/share/nginx/html
+2026-06-12T21:46:22.5344556Z #17 DONE 0.0s
+2026-06-12T21:46:22.5344709Z 
+2026-06-12T21:46:22.5344930Z #18 [stage-1 3/3] COPY frontend/nginx.conf /etc/nginx/conf.d/default.conf
+2026-06-12T21:46:22.5345346Z #18 DONE 0.0s
+2026-06-12T21:46:22.5345532Z 
+2026-06-12T21:46:22.5346100Z #19 exporting to image
+2026-06-12T21:46:22.5346383Z #19 exporting layers
+2026-06-12T21:46:23.0053783Z #19 exporting layers 0.6s done
+2026-06-12T21:46:23.0234851Z #19 writing image sha256:0a935cd0dc1f6bcb56c995bd6e75344a34e63dc2370b1de298bbcdcf9fc414b7 done
+2026-06-12T21:46:23.0236270Z #19 naming to ***-docker.pkg.dev/***/***/frontend:befdfa30d4f4314ae6072dc1e85bd17123ef70cb done
+2026-06-12T21:46:23.0237054Z #19 DONE 0.6s
+2026-06-12T21:46:23.0264105Z 
+2026-06-12T21:46:23.0265745Z  [33m6 warnings found (use docker --debug to expand):
+2026-06-12T21:46:23.0267069Z [0m - SecretsUsedInArgOrEnv: Do not use ARG or ENV instructions for sensitive data (ENV "VITE_FIREBASE_VAPID_KEY") (line 25)
+2026-06-12T21:46:23.0268774Z  - SecretsUsedInArgOrEnv: Do not use ARG or ENV instructions for sensitive data (ARG "VITE_FIREBASE_API_KEY") (line 18)
+2026-06-12T21:46:23.0270667Z  - SecretsUsedInArgOrEnv: Do not use ARG or ENV instructions for sensitive data (ARG "VITE_FIREBASE_AUTH_DOMAIN") (line 19)
+2026-06-12T21:46:23.0272238Z  - SecretsUsedInArgOrEnv: Do not use ARG or ENV instructions for sensitive data (ARG "VITE_FIREBASE_VAPID_KEY") (line 24)
+2026-06-12T21:46:23.0273629Z  - SecretsUsedInArgOrEnv: Do not use ARG or ENV instructions for sensitive data (ENV "VITE_FIREBASE_API_KEY") (line 25)
+2026-06-12T21:46:23.0275032Z  - SecretsUsedInArgOrEnv: Do not use ARG or ENV instructions for sensitive data (ENV "VITE_FIREBASE_AUTH_DOMAIN") (line 25)
+2026-06-12T21:46:23.5365854Z The push refers to repository [***-docker.pkg.dev/***/***/frontend]
+2026-06-12T21:46:23.8948528Z 7e65a4aa2dd4: Preparing
+2026-06-12T21:46:23.8949327Z ba84aa85c16c: Preparing
+2026-06-12T21:46:23.8949769Z 0d853d50b128: Preparing
+2026-06-12T21:46:23.8950189Z 947e805a4ac7: Preparing
+2026-06-12T21:46:23.8950629Z 811a4dbbf4a5: Preparing
+2026-06-12T21:46:23.8951030Z b8d7d1d22634: Preparing
+2026-06-12T21:46:23.8951375Z e244aa659f61: Preparing
+2026-06-12T21:46:23.8951634Z c56f134d3805: Preparing
+2026-06-12T21:46:23.8951980Z d71eae0084c1: Preparing
+2026-06-12T21:46:23.8952432Z 08000c18d16d: Preparing
+2026-06-12T21:46:23.8952853Z b8d7d1d22634: Waiting
+2026-06-12T21:46:23.8953242Z e244aa659f61: Waiting
+2026-06-12T21:46:23.8953614Z c56f134d3805: Waiting
+2026-06-12T21:46:23.8953987Z d71eae0084c1: Waiting
+2026-06-12T21:46:23.8954320Z 08000c18d16d: Waiting
+2026-06-12T21:46:24.6462959Z 0d853d50b128: Layer already exists
+2026-06-12T21:46:24.6785882Z 947e805a4ac7: Layer already exists
+2026-06-12T21:46:24.6954462Z 811a4dbbf4a5: Layer already exists
+2026-06-12T21:46:25.0446151Z e244aa659f61: Layer already exists
+2026-06-12T21:46:25.0656555Z b8d7d1d22634: Layer already exists
+2026-06-12T21:46:25.0988915Z c56f134d3805: Layer already exists
+2026-06-12T21:46:25.4273802Z d71eae0084c1: Layer already exists
+2026-06-12T21:46:25.4406619Z 08000c18d16d: Layer already exists
+2026-06-12T21:46:25.8791778Z 7e65a4aa2dd4: Pushed
+2026-06-12T21:46:26.1238209Z ba84aa85c16c: Pushed
+2026-06-12T21:46:28.2018198Z befdfa30d4f4314ae6072dc1e85bd17123ef70cb: digest: sha256:44e635027e37b12b0f707e72a97e712d0f45bf05cbd8fbc327ddf562f708c466 size: 2408
+2026-06-12T21:46:28.2154220Z ##[group]Run google-github-actions/get-gke-credentials@v2
+2026-06-12T21:46:28.2154904Z with:
+2026-06-12T21:46:28.2155364Z   cluster_name: ***
+2026-06-12T21:46:28.2155816Z   location: ***
+2026-06-12T21:46:28.2156238Z   use_auth_provider: false
+2026-06-12T21:46:28.2156708Z   use_internal_ip: false
+2026-06-12T21:46:28.2157161Z   use_connect_gateway: false
+2026-06-12T21:46:28.2157640Z   use_dns_based_endpoint: false
+2026-06-12T21:46:28.2158099Z env:
+2026-06-12T21:46:28.2158849Z   GCP_PROJECT_ID: ***
+2026-06-12T21:46:28.2159291Z   GCP_REGION: ***
+2026-06-12T21:46:28.2159709Z   GKE_CLUSTER: ***
+2026-06-12T21:46:28.2160130Z   GKE_ZONE: ***
+2026-06-12T21:46:28.2160548Z   AR_REPO: ***
+2026-06-12T21:46:28.2161482Z   CLOUDSDK_AUTH_CREDENTIAL_FILE_OVERRIDE: /home/runner/work/cs144-finalproject/cs144-finalproject/gha-creds-e2470f6b4404bb61.json
+2026-06-12T21:46:28.2162928Z   GOOGLE_APPLICATION_CREDENTIALS: /home/runner/work/cs144-finalproject/cs144-finalproject/gha-creds-e2470f6b4404bb61.json
+2026-06-12T21:46:28.2164726Z   GOOGLE_GHA_CREDS_PATH: /home/runner/work/cs144-finalproject/cs144-finalproject/gha-creds-e2470f6b4404bb61.json
+2026-06-12T21:46:28.2165717Z   CLOUDSDK_CORE_PROJECT: ***
+2026-06-12T21:46:28.2166227Z   CLOUDSDK_PROJECT: ***
+2026-06-12T21:46:28.2166699Z   GCLOUD_PROJECT: ***
+2026-06-12T21:46:28.2167162Z   GCP_PROJECT: ***
+2026-06-12T21:46:28.2167613Z   GOOGLE_CLOUD_PROJECT: ***
+2026-06-12T21:46:28.2168191Z   CLOUDSDK_METRICS_ENVIRONMENT: github-actions-setup-gcloud
+2026-06-12T21:46:28.2169097Z   CLOUDSDK_METRICS_ENVIRONMENT_VERSION: 2.2.1
+2026-06-12T21:46:28.2170175Z   BACKEND_IMAGE: ***-docker.pkg.dev/***/***/backend:befdfa30d4f4314ae6072dc1e85bd17123ef70cb
+2026-06-12T21:46:28.2171484Z   FRONTEND_IMAGE: ***-docker.pkg.dev/***/***/frontend:befdfa30d4f4314ae6072dc1e85bd17123ef70cb
+2026-06-12T21:46:28.2172231Z ##[endgroup]
+2026-06-12T21:46:29.0390345Z Successfully created and exported "KUBECONFIG" at: /home/runner/work/cs144-finalproject/cs144-finalproject/gha-kubeconfig-119ffde209ed1647
+2026-06-12T21:46:29.0478896Z ##[group]Run mkdir -p k8s-rendered
+2026-06-12T21:46:29.0479300Z [36;1mmkdir -p k8s-rendered[0m
+2026-06-12T21:46:29.0479624Z [36;1mcp -r k8s/* k8s-rendered/[0m
+2026-06-12T21:46:29.0480160Z [36;1msed -i "s|IMAGE_PLACEHOLDER_BACKEND|${BACKEND_IMAGE}|g" k8s-rendered/backend-deployment.yaml[0m
+2026-06-12T21:46:29.0480889Z [36;1msed -i "s|IMAGE_PLACEHOLDER_FRONTEND|${FRONTEND_IMAGE}|g" k8s-rendered/frontend-deployment.yaml[0m
+2026-06-12T21:46:29.0481710Z [36;1msed -i "s|DOMAIN_PLACEHOLDER|***|g" k8s-rendered/ingress.yaml[0m
+2026-06-12T21:46:29.0516439Z shell: /usr/bin/bash -e {0}
+2026-06-12T21:46:29.0516755Z env:
+2026-06-12T21:46:29.0517063Z   GCP_PROJECT_ID: ***
+2026-06-12T21:46:29.0517381Z   GCP_REGION: ***
+2026-06-12T21:46:29.0517671Z   GKE_CLUSTER: ***
+2026-06-12T21:46:29.0517951Z   GKE_ZONE: ***
+2026-06-12T21:46:29.0518219Z   AR_REPO: ***
+2026-06-12T21:46:29.0519023Z   CLOUDSDK_AUTH_CREDENTIAL_FILE_OVERRIDE: /home/runner/work/cs144-finalproject/cs144-finalproject/gha-creds-e2470f6b4404bb61.json
+2026-06-12T21:46:29.0519933Z   GOOGLE_APPLICATION_CREDENTIALS: /home/runner/work/cs144-finalproject/cs144-finalproject/gha-creds-e2470f6b4404bb61.json
+2026-06-12T21:46:29.0520742Z   GOOGLE_GHA_CREDS_PATH: /home/runner/work/cs144-finalproject/cs144-finalproject/gha-creds-e2470f6b4404bb61.json
+2026-06-12T21:46:29.0521349Z   CLOUDSDK_CORE_PROJECT: ***
+2026-06-12T21:46:29.0521677Z   CLOUDSDK_PROJECT: ***
+2026-06-12T21:46:29.0521976Z   GCLOUD_PROJECT: ***
+2026-06-12T21:46:29.0522264Z   GCP_PROJECT: ***
+2026-06-12T21:46:29.0522552Z   GOOGLE_CLOUD_PROJECT: ***
+2026-06-12T21:46:29.0522914Z   CLOUDSDK_METRICS_ENVIRONMENT: github-actions-setup-gcloud
+2026-06-12T21:46:29.0523355Z   CLOUDSDK_METRICS_ENVIRONMENT_VERSION: 2.2.1
+2026-06-12T21:46:29.0524027Z   BACKEND_IMAGE: ***-docker.pkg.dev/***/***/backend:befdfa30d4f4314ae6072dc1e85bd17123ef70cb
+2026-06-12T21:46:29.0524790Z   FRONTEND_IMAGE: ***-docker.pkg.dev/***/***/frontend:befdfa30d4f4314ae6072dc1e85bd17123ef70cb
+2026-06-12T21:46:29.0525491Z   KUBECONFIG: /home/runner/work/cs144-finalproject/cs144-finalproject/gha-kubeconfig-119ffde209ed1647
+2026-06-12T21:46:29.0526236Z   KUBE_CONFIG_PATH: /home/runner/work/cs144-finalproject/cs144-finalproject/gha-kubeconfig-119ffde209ed1647
+2026-06-12T21:46:29.0526792Z ##[endgroup]
+2026-06-12T21:46:29.0686526Z ##[group]Run kubectl apply -f k8s-rendered/namespace.yaml
+2026-06-12T21:46:29.0686996Z [36;1mkubectl apply -f k8s-rendered/namespace.yaml[0m
+2026-06-12T21:46:29.0687449Z [36;1mkubectl apply -f k8s-rendered/backend-deployment.yaml[0m
+2026-06-12T21:46:29.0687921Z [36;1mkubectl apply -f k8s-rendered/backend-service.yaml[0m
+2026-06-12T21:46:29.0688656Z [36;1mkubectl apply -f k8s-rendered/frontend-deployment.yaml[0m
+2026-06-12T21:46:29.0689391Z [36;1mkubectl apply -f k8s-rendered/frontend-service.yaml[0m
+2026-06-12T21:46:29.0689818Z [36;1mkubectl apply -f k8s-rendered/hpa.yaml[0m
+2026-06-12T21:46:29.0690215Z [36;1mkubectl apply -f k8s-rendered/ingress.yaml[0m
+2026-06-12T21:46:29.0721193Z shell: /usr/bin/bash -e {0}
+2026-06-12T21:46:29.0721504Z env:
+2026-06-12T21:46:29.0721814Z   GCP_PROJECT_ID: ***
+2026-06-12T21:46:29.0722126Z   GCP_REGION: ***
+2026-06-12T21:46:29.0722418Z   GKE_CLUSTER: ***
+2026-06-12T21:46:29.0722703Z   GKE_ZONE: ***
+2026-06-12T21:46:29.0723009Z   AR_REPO: ***
+2026-06-12T21:46:29.0723599Z   CLOUDSDK_AUTH_CREDENTIAL_FILE_OVERRIDE: /home/runner/work/cs144-finalproject/cs144-finalproject/gha-creds-e2470f6b4404bb61.json
+2026-06-12T21:46:29.0724509Z   GOOGLE_APPLICATION_CREDENTIALS: /home/runner/work/cs144-finalproject/cs144-finalproject/gha-creds-e2470f6b4404bb61.json
+2026-06-12T21:46:29.0725322Z   GOOGLE_GHA_CREDS_PATH: /home/runner/work/cs144-finalproject/cs144-finalproject/gha-creds-e2470f6b4404bb61.json
+2026-06-12T21:46:29.0725918Z   CLOUDSDK_CORE_PROJECT: ***
+2026-06-12T21:46:29.0726249Z   CLOUDSDK_PROJECT: ***
+2026-06-12T21:46:29.0726553Z   GCLOUD_PROJECT: ***
+2026-06-12T21:46:29.0726847Z   GCP_PROJECT: ***
+2026-06-12T21:46:29.0727155Z   GOOGLE_CLOUD_PROJECT: ***
+2026-06-12T21:46:29.0727516Z   CLOUDSDK_METRICS_ENVIRONMENT: github-actions-setup-gcloud
+2026-06-12T21:46:29.0727947Z   CLOUDSDK_METRICS_ENVIRONMENT_VERSION: 2.2.1
+2026-06-12T21:46:29.0728896Z   BACKEND_IMAGE: ***-docker.pkg.dev/***/***/backend:befdfa30d4f4314ae6072dc1e85bd17123ef70cb
+2026-06-12T21:46:29.0729926Z   FRONTEND_IMAGE: ***-docker.pkg.dev/***/***/frontend:befdfa30d4f4314ae6072dc1e85bd17123ef70cb
+2026-06-12T21:46:29.0730623Z   KUBECONFIG: /home/runner/work/cs144-finalproject/cs144-finalproject/gha-kubeconfig-119ffde209ed1647
+2026-06-12T21:46:29.0731385Z   KUBE_CONFIG_PATH: /home/runner/work/cs144-finalproject/cs144-finalproject/gha-kubeconfig-119ffde209ed1647
+2026-06-12T21:46:29.0731941Z ##[endgroup]
+2026-06-12T21:46:30.2377496Z namespace/*** unchanged
+2026-06-12T21:46:30.9989668Z deployment.apps/backend configured
+2026-06-12T21:46:31.5702932Z service/backend unchanged
+2026-06-12T21:46:32.0685202Z deployment.apps/frontend configured
+2026-06-12T21:46:32.6179720Z service/frontend unchanged
+2026-06-12T21:46:33.0729349Z horizontalpodautoscaler.autoscaling/backend-hpa unchanged
+2026-06-12T21:46:34.7208640Z managedcertificate.networking.gke.io/***-cert unchanged
+2026-06-12T21:46:34.8261792Z ingress.networking.k8s.io/***-ingress unchanged
+2026-06-12T21:46:34.8342719Z ##[group]Run kubectl -n *** rollout status deploy/backend --timeout=5m
+2026-06-12T21:46:34.8343319Z [36;1mkubectl -n *** rollout status deploy/backend --timeout=5m[0m
+2026-06-12T21:46:34.8343840Z [36;1mkubectl -n *** rollout status deploy/frontend --timeout=5m[0m
+2026-06-12T21:46:34.8377428Z shell: /usr/bin/bash -e {0}
+2026-06-12T21:46:34.8377739Z env:
+2026-06-12T21:46:34.8378044Z   GCP_PROJECT_ID: ***
+2026-06-12T21:46:34.8378540Z   GCP_REGION: ***
+2026-06-12T21:46:34.8378850Z   GKE_CLUSTER: ***
+2026-06-12T21:46:34.8379133Z   GKE_ZONE: ***
+2026-06-12T21:46:34.8379403Z   AR_REPO: ***
+2026-06-12T21:46:34.8379979Z   CLOUDSDK_AUTH_CREDENTIAL_FILE_OVERRIDE: /home/runner/work/cs144-finalproject/cs144-finalproject/gha-creds-e2470f6b4404bb61.json
+2026-06-12T21:46:34.8380903Z   GOOGLE_APPLICATION_CREDENTIALS: /home/runner/work/cs144-finalproject/cs144-finalproject/gha-creds-e2470f6b4404bb61.json
+2026-06-12T21:46:34.8381768Z   GOOGLE_GHA_CREDS_PATH: /home/runner/work/cs144-finalproject/cs144-finalproject/gha-creds-e2470f6b4404bb61.json
+2026-06-12T21:46:34.8382364Z   CLOUDSDK_CORE_PROJECT: ***
+2026-06-12T21:46:34.8382694Z   CLOUDSDK_PROJECT: ***
+2026-06-12T21:46:34.8383160Z   GCLOUD_PROJECT: ***
+2026-06-12T21:46:34.8383608Z   GCP_PROJECT: ***
+2026-06-12T21:46:34.8383962Z   GOOGLE_CLOUD_PROJECT: ***
+2026-06-12T21:46:34.8384326Z   CLOUDSDK_METRICS_ENVIRONMENT: github-actions-setup-gcloud
+2026-06-12T21:46:34.8384752Z   CLOUDSDK_METRICS_ENVIRONMENT_VERSION: 2.2.1
+2026-06-12T21:46:34.8385458Z   BACKEND_IMAGE: ***-docker.pkg.dev/***/***/backend:befdfa30d4f4314ae6072dc1e85bd17123ef70cb
+2026-06-12T21:46:34.8386455Z   FRONTEND_IMAGE: ***-docker.pkg.dev/***/***/frontend:befdfa30d4f4314ae6072dc1e85bd17123ef70cb
+2026-06-12T21:46:34.8387392Z   KUBECONFIG: /home/runner/work/cs144-finalproject/cs144-finalproject/gha-kubeconfig-119ffde209ed1647
+2026-06-12T21:46:34.8388139Z   KUBE_CONFIG_PATH: /home/runner/work/cs144-finalproject/cs144-finalproject/gha-kubeconfig-119ffde209ed1647
+2026-06-12T21:46:34.8388804Z ##[endgroup]
+2026-06-12T21:46:35.1711362Z Waiting for deployment "backend" rollout to finish: 1 out of 2 new replicas have been updated...
+2026-06-12T21:47:00.7560628Z Waiting for deployment "backend" rollout to finish: 1 out of 2 new replicas have been updated...
+2026-06-12T21:47:00.8912472Z Waiting for deployment "backend" rollout to finish: 1 out of 2 new replicas have been updated...
+2026-06-12T21:47:00.9750324Z Waiting for deployment "backend" rollout to finish: 1 old replicas are pending termination...
+2026-06-12T21:47:08.9209305Z Waiting for deployment "backend" rollout to finish: 1 old replicas are pending termination...
+2026-06-12T21:47:09.0529121Z deployment "backend" successfully rolled out
+2026-06-12T21:47:09.3715344Z deployment "frontend" successfully rolled out
+2026-06-12T21:47:09.3790615Z ##[group]Run kubectl -n *** get pods -o wide
+2026-06-12T21:47:09.3791073Z [36;1mkubectl -n *** get pods -o wide[0m
+2026-06-12T21:47:09.3791425Z [36;1mkubectl -n *** get svc[0m
+2026-06-12T21:47:09.3791758Z [36;1mkubectl -n *** get ingress[0m
+2026-06-12T21:47:09.3825411Z shell: /usr/bin/bash -e {0}
+2026-06-12T21:47:09.3825713Z env:
+2026-06-12T21:47:09.3826003Z   GCP_PROJECT_ID: ***
+2026-06-12T21:47:09.3826315Z   GCP_REGION: ***
+2026-06-12T21:47:09.3826600Z   GKE_CLUSTER: ***
+2026-06-12T21:47:09.3826883Z   GKE_ZONE: ***
+2026-06-12T21:47:09.3827145Z   AR_REPO: ***
+2026-06-12T21:47:09.3827729Z   CLOUDSDK_AUTH_CREDENTIAL_FILE_OVERRIDE: /home/runner/work/cs144-finalproject/cs144-finalproject/gha-creds-e2470f6b4404bb61.json
+2026-06-12T21:47:09.3828880Z   GOOGLE_APPLICATION_CREDENTIALS: /home/runner/work/cs144-finalproject/cs144-finalproject/gha-creds-e2470f6b4404bb61.json
+2026-06-12T21:47:09.3829731Z   GOOGLE_GHA_CREDS_PATH: /home/runner/work/cs144-finalproject/cs144-finalproject/gha-creds-e2470f6b4404bb61.json
+2026-06-12T21:47:09.3830336Z   CLOUDSDK_CORE_PROJECT: ***
+2026-06-12T21:47:09.3830666Z   CLOUDSDK_PROJECT: ***
+2026-06-12T21:47:09.3830967Z   GCLOUD_PROJECT: ***
+2026-06-12T21:47:09.3831265Z   GCP_PROJECT: ***
+2026-06-12T21:47:09.3831554Z   GOOGLE_CLOUD_PROJECT: ***
+2026-06-12T21:47:09.3831915Z   CLOUDSDK_METRICS_ENVIRONMENT: github-actions-setup-gcloud
+2026-06-12T21:47:09.3832337Z   CLOUDSDK_METRICS_ENVIRONMENT_VERSION: 2.2.1
+2026-06-12T21:47:09.3832986Z   BACKEND_IMAGE: ***-docker.pkg.dev/***/***/backend:befdfa30d4f4314ae6072dc1e85bd17123ef70cb
+2026-06-12T21:47:09.3833733Z   FRONTEND_IMAGE: ***-docker.pkg.dev/***/***/frontend:befdfa30d4f4314ae6072dc1e85bd17123ef70cb
+2026-06-12T21:47:09.3834409Z   KUBECONFIG: /home/runner/work/cs144-finalproject/cs144-finalproject/gha-kubeconfig-119ffde209ed1647
+2026-06-12T21:47:09.3835148Z   KUBE_CONFIG_PATH: /home/runner/work/cs144-finalproject/cs144-finalproject/gha-kubeconfig-119ffde209ed1647
+2026-06-12T21:47:09.3835687Z ##[endgroup]
+2026-06-12T21:47:09.6856704Z NAME                       READY   STATUS      RESTARTS   AGE   IP           NODE                                        NOMINATED NODE   READINESS GATES
+2026-06-12T21:47:09.6858163Z backend-67888999b4-5xblc   0/1     Completed   0          45h   10.12.2.29   gke-***-pool-small-e8ca3f51-gcnj   <none>           1/1
+2026-06-12T21:47:09.6859618Z backend-7668f86dc7-7t8mn   1/1     Running     0          38s   10.12.2.33   gke-***-pool-small-e8ca3f51-gcnj   <none>           1/1
+2026-06-12T21:47:09.6860449Z backend-7668f86dc7-swkvp   1/1     Running     0          9s    10.12.2.35   gke-***-pool-small-e8ca3f51-gcnj   <none>           1/1
+2026-06-12T21:47:09.6861316Z frontend-b787f9978-brng4   1/1     Running     0          37s   10.12.3.11   gke-***-pool-small-e8ca3f51-thtf   <none>           1/1
+2026-06-12T21:47:09.6862136Z frontend-b787f9978-m2brk   1/1     Running     0          28s   10.12.2.34   gke-***-pool-small-e8ca3f51-gcnj   <none>           1/1
+2026-06-12T21:47:09.9551847Z NAME       TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)   AGE
+2026-06-12T21:47:09.9552576Z backend    ClusterIP   34.118.237.61    <none>        80/TCP    3d21h
+2026-06-12T21:47:09.9553301Z frontend   ClusterIP   34.118.238.206   <none>        80/TCP    3d21h
+2026-06-12T21:47:10.2209319Z NAME               CLASS    HOSTS                                 ADDRESS         PORTS   AGE
+2026-06-12T21:47:10.2210552Z ***-ingress   <none>   ***   8.233.138.244   80      3d21h
+2026-06-12T21:47:10.2330518Z Post job cleanup.
+2026-06-12T21:47:10.3194448Z Removed exported credentials at "/home/runner/work/cs144-finalproject/cs144-finalproject/gha-creds-e2470f6b4404bb61.json".
+2026-06-12T21:47:10.3306616Z Post job cleanup.
+2026-06-12T21:47:10.4326396Z [command]/usr/bin/git version
+2026-06-12T21:47:10.4364357Z git version 2.54.0
+2026-06-12T21:47:10.4405469Z Temporarily overriding HOME='/home/runner/work/_temp/97cedd39-c16b-48fe-b9ab-ef2c606ddd25' before making global git config changes
+2026-06-12T21:47:10.4406788Z Adding repository directory to the temporary git global config as a safe directory
+2026-06-12T21:47:10.4419171Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/cs144-finalproject/cs144-finalproject
+2026-06-12T21:47:10.4455619Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-06-12T21:47:10.4491713Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-06-12T21:47:10.4738837Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-06-12T21:47:10.4763841Z http.https://github.com/.extraheader
+2026-06-12T21:47:10.4785167Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-06-12T21:47:10.4810395Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-06-12T21:47:10.5045681Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-06-12T21:47:10.5078890Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-06-12T21:47:10.5483141Z Cleaning up orphan processes
+2026-06-12T21:47:10.5835475Z ##[warning]Node.js 20 actions are deprecated. The following actions are running on Node.js 20 and may not work as expected: actions/checkout@v4, google-github-actions/auth@v2, google-github-actions/get-gke-credentials@v2, google-github-actions/setup-gcloud@v2. Actions will be forced to run with Node.js 24 by default starting June 16th, 2026. Node.js 20 will be removed from the runner on September 16th, 2026. Please check if updated versions of these actions are available that support Node.js 24. To opt into Node.js 24 now, set the FORCE_JAVASCRIPT_ACTIONS_TO_NODE24=true environment variable on the runner or in your workflow file. Once Node.js 24 becomes the default, you can temporarily opt out by setting ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

@@ -62,7 +62,7 @@ Sentence-per-bullet mapping from the project spec to where it lives in this repo
 - **CI/CD** — two GitHub Actions workflows:
   - [`.github/workflows/ci.yml`](.github/workflows/ci.yml) runs on PR and push: install → lint → typecheck → unit tests → build (frontend + backend).
   - [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml) runs on push to `main`: the CI checks, then authenticates to GCP via Workload Identity Federation (no long-lived JSON keys), builds and pushes both Docker images to Artifact Registry (tagged with the commit SHA), renders the k8s manifests with the new image tags + domain, and `kubectl apply`s them with a `kubectl rollout status` wait.
-  - Logs visibly show **build**, **test**, and **deploy** as three distinct stages. Two successful run logs are saved to [`/logs/`](logs/).
+  - Logs visibly show **build**, **test**, and **deploy** as three distinct stages. Two successful run logs are committed under [`/logs/`](logs/): [`ci-run-11.log`](logs/ci-run-11.log) (lint, typecheck, test, build) and [`deploy-run-11.log`](logs/deploy-run-11.log) (build + push images, then `kubectl apply` and a successful GKE rollout).
 
 ## AI usage itemization
 

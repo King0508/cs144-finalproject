@@ -1,14 +1,15 @@
 # CI/CD Logs
 
 The CS 144 spec requires "GitHub Actions logs demonstrating build, test, and deploy stages."
-Commit two successful run logs into this folder before the Jun 12 final-deadline submission:
 
-- one **CI** run (`ci.yml`) — shows lint, typecheck, **test**, and **build** steps
-- one **Deploy** run (`deploy.yml`) — shows the `Build & test` job and the `Build images & deploy to GKE` job (build/push images, get GKE credentials, deploy, rollout status)
+## Committed logs
 
-Together these cover the spec's build / test / deploy stages.
+- [`ci-run-11.log`](ci-run-11.log) — **CI** workflow (`ci.yml`), run #11. Shows lint, typecheck, **unit tests**, and **build** (frontend + backend).
+- [`deploy-run-11.log`](deploy-run-11.log) — **Deploy** workflow (`deploy.yml`), run #11, `Build images & deploy to GKE` job. Shows building + pushing the backend and frontend images to Artifact Registry (**build**) and the `kubectl apply` + successful rollout to GKE (**deploy**), ending with 2/2 backend and 2/2 frontend pods `Running` plus the ingress external IP.
 
-## How to grab the logs
+Together these cover the spec's build / test / deploy stages. (GitHub auto-masks repository secrets as `***`, so no project IDs, domains, or credentials are exposed in the committed logs.)
+
+## How to refresh the logs
 
 These commands run on your own machine and need the [GitHub CLI](https://cli.github.com/).
 Run `gh auth login` once first.
